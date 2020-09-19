@@ -1,14 +1,16 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import Player from "../game/classes/Player"
-import Enemy from "../game/classes/Enemy"
-import Upgrade from "../game/classes/Upgrade"
-import EnemyBullet from "../game/classes/EnemyBullet"
 import {testCollisionEntity, testCollisionEntity2 } from "../game/actions/collision"
+import {randomlyGenerateEnemy, randomlyGenerateUpgrade, generateEnemyBullet } from "../game/actions/actions"
+import { GameContext } from '../context/GameContext'
+import Register from '../components/Register'
 
 const Game = () => {
 
-    useEffect(() => {
+    const {gameOver, setGameOver, setFinalScore } = useContext(GameContext)
 
+    useEffect(() => {
+        console.log('game started')
         //VARIABLES
       
         var canvas = document.getElementById("ctx");
@@ -34,7 +36,7 @@ const Game = () => {
         // game logic 
         var enemies_generated = 0;  //numero di nemici generati dall inizio
     
-        var towerLife = 100;
+        var towerLife = 1;
         var tower_start = 628;//564;    //definisce il punto in cui i nemici si fermano per attaccare la torre
         var tower_end = 770;
         var tower_distance_left= 0;   //distance between two enemies at tower
@@ -84,7 +86,8 @@ const Game = () => {
         //PLAYER
         var player1 = new Player(555,385,[{x:0,y:0,w:65,h:65},{x:0,y:65,w:65,h:65}],     [{x:130,y:0,w:70,h:19},{x:200,y:0,w:70,h:19}]);
       
-        //HANDLE KEYS
+        //EVENT LISTENERS
+        // key handlers
         function keyDownHandler(event){
       
             if(player1.confused){
@@ -154,101 +157,8 @@ const Game = () => {
       
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);
-
-      
-        //ENEMIES    
-        function randomlyGenerateEnemy (category,x,y,spdX,w,h,sprites,hp, side, power, score, push){
-            var id = Math.random();
-            var spdY;
-            if(category === 'blob')
-              spdY = 12;
-            else
-              spdY = 0;
-            var toRemove = false;
-            var atTower = false;
-            var check = true;
-
-            enemyList[id] = new Enemy(id,x,y,spdX,spdY,w,h,sprites,hp,toRemove,atTower,check, side, power,category,score,push);
-        }
-      
-        //UPGRADES   
-        function randomlyGenerateUpgrade (c,s){
-            var x = Math.random() < 0.5 ? Math.random()*400 + 100 : Math.random()*400 + 900;						//Math.random() * 1200 + 100;
-            var y = Math.random()*20 + 275;
-            var h = 35;     //between 10 and 40
-            var w = 35;
-            var id = Math.random();
-            var spdX = 0;
-            var spdY = 0;
-            var category;
-            var sprites;
-            
-            if(frameCount <= 7000){     //<=7000
-              let n = Math.random();
-              if(n < 0.4){   //0.4
-                  category = 'recharge';
-                  sprites = [{x:130,y:20,w:35,h:35}];
-              }
-              else if(n >= 0.4 && n < 0.8){
-                  category = 'poison';
-                  sprites = [{x:130,y:56,w:35,h:35}];
-              }
-              else {
-                  category = 'attackspeed';
-                  sprites = [{x:130,y:90,w:35,h:35}];
-              }
-            }
-
-            if(frameCount > 7000 && frameCount <= 11500){
-              let n = Math.random();
-              if(n < 0.5){
-                  category = 'recharge';
-                  sprites = [{x:130,y:20,w:35,h:35}];
-              }
-              else if(n >=0.5 && n < 0.9){
-                  category = 'jump';
-                  sprites = [{x:130,y:125,w:35,h:35}]
-              }
-              else if(n >=0.9 && n < 0.95){
-                  category = 'poison';
-                  sprites = [{x:130,y:55,w:35,h:35}];
-              }
-              else {
-                  category = 'attackspeed';
-                  sprites = [{x:130,y:90,w:35,h:35}];
-              }
-            }
-
-            if(frameCount > 11500){
-              var n = Math.random();
-              if(n < 0.1){
-                  category = 'jump';
-                  sprites = [{x:130,y:125,w:35,h:35}]
-              }
-              else if(n >= 0.1 && n < 0.3){
-                  category = 'recharge';
-                  sprites = [{x:130,y:20,w:35,h:35}];
-              }
-              else if(n >= 0.3 && n < 0.5){
-                  category = 'attackspeed';
-                  sprites = [{x:130,y:90,w:35,h:35}];
-              }
-              else{
-                  category = 'special_attack';
-                  sprites = [{x:130,y:161,w:35,h:35}];
-              }
-            }
-
-            if(c !== undefined && s!== undefined){
-              category = c;
-              sprites = s;
-            }
-
-            upgradeList[id] = new Upgrade(id,x,y,spdX,spdY,w,h,category,sprites)
-            //Upgrade(id,x,y,spdX,spdY,w,h,category,sprites);
-        }
-      
-        //BULLETS
+        
+        // aim angle for bullets
         document.onmousemove = function(mouse){
       
             mouseX = mouse.clientX;
@@ -280,23 +190,8 @@ const Game = () => {
               //poison_y = mouseY + 185;
             }
         }
-      
-        function generateEnemyBullet (x,y,entity,side){
-            var h = 15;    
-            var w = 15;
-            var id = Math.random();
-            var toRemove = false;
-
-            var angle = Math.atan2(player1.y - (y + 160), player1.x - (x + 125)) / Math.PI * 180;
-
-            //var spdX = (player1.x - entity.x) % 1000;
-            //var spdY = (player1.y - entity.y) % 1000;
-            var spdX = Math.cos(angle/180*Math.PI)*5;   //convert angle in radiants
-            var spdY = Math.sin(angle/180*Math.PI)*5;
-            enemyBulletList[id] = new EnemyBullet(id,x + 125,y + 160,spdX,spdY,w,h,toRemove,side);
-            //EnemyBullet(id,x,y,spdX,spdY,w,h,toRemove,side);
-        }
-      
+        
+        //bullet shooting
         document.onclick = function(mouse){   //on left click
             if(continue_update && player1.can_shoot){
               if(player1.special_attack)
@@ -311,6 +206,7 @@ const Game = () => {
             }
         }
       
+        //GAME LOGIC
         function updateEntity (entity){
             updateEntityPosition (entity);
             drawEntity (entity);
@@ -344,7 +240,11 @@ const Game = () => {
           ctx.font = '20px Arial';
           if(towerLife > 0)
 		        frameCount++;
-	        ctx.fillText(frameCount,400,100);
+          ctx.fillText(frameCount,400,100);
+          
+          if(frameCount === 10)
+          randomlyGenerateEnemy(enemyList, 'zombie',  300,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);   
+
       
           if(player1.got_poison){
             ctx.fillStyle = 'white';
@@ -420,50 +320,50 @@ const Game = () => {
             let n = Math.random();
       
             if(frameCount <= 2000)
-                randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);   
+                randomlyGenerateEnemy(enemyList, 'zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);   
             if(frameCount > 2000 && frameCount <= 7000)
               if(n < 0.7)
-                randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
+                randomlyGenerateEnemy(enemyList, 'zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
               else
-                randomlyGenerateEnemy('wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
+                randomlyGenerateEnemy(enemyList, 'wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
             if(enemies_generated === 25){	
-                randomlyGenerateEnemy('bosszombie',-120,  330,   0.5,  120,120,[{x:340,y:0,w:120,h:120}],30, 'left',    10,     50,      5);
+                randomlyGenerateEnemy(enemyList, 'bosszombie',-120,  330,   0.5,  120,120,[{x:340,y:0,w:120,h:120}],30, 'left',    10,     50,      5);
                 right = false;
               }
             if(frameCount > 7000 && frameCount <= 11700 )
               if(n < 0.3)
-                randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
+                randomlyGenerateEnemy(enemyList, 'zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
               else if(n >= 0.3 && n < 0.5)
-                randomlyGenerateEnemy('wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
+                randomlyGenerateEnemy(enemyList, 'wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
               else
-                randomlyGenerateEnemy('dragon',  -87,Math.random()*30 + 200,0.6, 87,46,[{x:461,y:0,w:84,h:45}],3,'left',2,       8,      2);
+                randomlyGenerateEnemy(enemyList, 'dragon',  -87,Math.random()*30 + 200,0.6, 87,46,[{x:461,y:0,w:84,h:45}],3,'left',2,       8,      2);
             if(enemies_generated === 50){
-              randomlyGenerateEnemy('bossdragon', -201,   210,    0.4, 201,89,[{x:548,y:0,w:200,h:89}],30, 'left',       8,        80,     1);
+              randomlyGenerateEnemy(enemyList, 'bossdragon', -201,   210,    0.4, 201,89,[{x:548,y:0,w:200,h:89}],30, 'left',       8,        80,     1);
               right = false;
             }
             if(frameCount > 11700)
               if(n < 0.4)
-                randomlyGenerateEnemy('blob',   -80,  370,  1.6,  80,80, [{x:749,y:0,w:80,h:80}],5,     'left',        2,        20,    8);
+                randomlyGenerateEnemy(enemyList, 'blob',   -80,  370,  1.6,  80,80, [{x:749,y:0,w:80,h:80}],5,     'left',        2,        20,    8);
               else if (n >= 0.4 && n < 0.6)
-                randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
+                randomlyGenerateEnemy(enemyList, 'zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
               else
-                randomlyGenerateEnemy('digger',Math.random()*90+240, 460,    1.2,  55,55,  [{x:830,y:0,w:55,h:55}], 3, 'left',  1, 7,   5);
+                randomlyGenerateEnemy(enemyList, 'digger',Math.random()*90+240, 460,    1.2,  55,55,  [{x:830,y:0,w:55,h:55}], 3, 'left',  1, 7,   5);
             if(enemies_generated === 86){
-              randomlyGenerateEnemy('finalboss',-250,200,0.3,250,250, [{x:886,y:0,w:250,h:250},{x:1144,y:0,w:250,h:250}], 100, 'left', 20, 200, 1 );
+              randomlyGenerateEnemy(enemyList, 'finalboss',-250,200,0.3,250,250, [{x:886,y:0,w:250,h:250},{x:1144,y:0,w:250,h:250}], 100, 'left', 20, 200, 1 );
               left = false;
               right = false;
             }
             if(frameCount > 18000){
               if(n < 0.2)
-                randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
+                randomlyGenerateEnemy(enemyList, 'zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
               else if(n >= 0.2 && n < 0.4)
-                randomlyGenerateEnemy('wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
+                randomlyGenerateEnemy(enemyList, 'wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
               else if(n >= 0.4 && n < 0.6)
-                randomlyGenerateEnemy('dragon',  -87,Math.random()*30 + 200,0.6, 87,46,[{x:461,y:0,w:84,h:45}],3,'left',2,       8,      2);
+                randomlyGenerateEnemy(enemyList, 'dragon',  -87,Math.random()*30 + 200,0.6, 87,46,[{x:461,y:0,w:84,h:45}],3,'left',2,       8,      2);
               else if(n >= 0.6 && n < 0.8)
-                randomlyGenerateEnemy('blob',   -80,  370,  1.6,  80,80, [{x:749,y:0,w:80,h:80}],5,     'left',        2,        20,    8);
+                randomlyGenerateEnemy(enemyList, 'blob',   -80,  370,  1.6,  80,80, [{x:749,y:0,w:80,h:80}],5,     'left',        2,        20,    8);
               else
-                randomlyGenerateEnemy('digger',Math.random()*90+240, 460,    1.2,  55,55,  [{x:830,y:0,w:55,h:55}], 3, 'left',  1, 7,   5);
+                randomlyGenerateEnemy(enemyList, 'digger',Math.random()*90+240, 460,    1.2,  55,55,  [{x:830,y:0,w:55,h:55}], 3, 'left',  1, 7,   5);
               }
             }
           }
@@ -474,50 +374,50 @@ const Game = () => {
             let n = Math.random();
       
             if(frameCount < 2000) 
-              randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);  
+              randomlyGenerateEnemy(enemyList, 'zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);  
             if(frameCount > 2000 && frameCount <= 7000)
               if(n < 0.7)
-                randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
+                randomlyGenerateEnemy(enemyList, 'zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
               else
-                randomlyGenerateEnemy('wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
+                randomlyGenerateEnemy(enemyList, 'wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
             if(enemies_generated === 25){	
                 randomlyGenerateEnemy('bosszombie',1400, 330,  -0.5, 120,120, [{x:341,y:120,w:120,h:120}],30,'right',   10,      50,     5);
                 left = false;
               }
             if(frameCount > 7000 && frameCount <= 11700)
               if(n < 0.3)
-                randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
+                randomlyGenerateEnemy(enemyList, 'zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
               else if(n >= 0.3 && n< 0.5)
-                randomlyGenerateEnemy('wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
+                randomlyGenerateEnemy(enemyList, 'wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
               else
-                randomlyGenerateEnemy('dragon',1400,Math.random()*30 + 200,-0.6,87,46,[{x:461,y:47,w:84,h:45}],3,'right',2,       8,     0);
+                randomlyGenerateEnemy(enemyList, 'dragon',1400,Math.random()*30 + 200,-0.6,87,46,[{x:461,y:47,w:84,h:45}],3,'right',2,       8,     0);
             if(enemies_generated === 50){
-              randomlyGenerateEnemy('bossdragon', 1400,   210,   -0.4,201,89,[{x:548,y:89,w:200,h:89}],30,'right',       8,        80,     1);
+              randomlyGenerateEnemy(enemyList, 'bossdragon', 1400,   210,   -0.4,201,89,[{x:548,y:89,w:200,h:89}],30,'right',       8,        80,     1);
               left = false;
             }
             if(frameCount > 11700)
               if(n < 0.4)
-                randomlyGenerateEnemy('blob',   1400,  370,  -1.6,  80,80, [{x:749,y:80,w:80,h:80}],5,'right',         2,        20,    8);
+                randomlyGenerateEnemy(enemyList, 'blob',   1400,  370,  -1.6,  80,80, [{x:749,y:80,w:80,h:80}],5,'right',         2,        20,    8);
               else if(n >= 0.4 && n < 0.6)
-                randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
+                randomlyGenerateEnemy(enemyList, 'zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
               else
-                randomlyGenerateEnemy('digger',Math.random()*90+1015, 460, -1.2,55,55,[{x:830,y:55,w:55,h:55}], 3, 'right',  1, 7,     5);
+                randomlyGenerateEnemy(enemyList, 'digger',Math.random()*90+1015, 460, -1.2,55,55,[{x:830,y:55,w:55,h:55}], 3, 'right',  1, 7,     5);
             if(enemies_generated === 86){
-              randomlyGenerateEnemy('finalboss',1400,200,-0.3,250,250, [{x:886,y:255,w:250,h:250},{x:1144,y:255,w:250,h:250}], 100, 'right', 20, 200, 1 );
+              randomlyGenerateEnemy(enemyList, 'finalboss',1400,200,-0.3,250,250, [{x:886,y:255,w:250,h:250},{x:1144,y:255,w:250,h:250}], 100, 'right', 20, 200, 1 );
               left = false;
               right = false;
             }
             if(frameCount > 18000){
               if(n < 0.2)
-                randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
+                randomlyGenerateEnemy(enemyList, 'zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
               else if(n >= 0.2 && n < 0.4)
-                randomlyGenerateEnemy('wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
+                randomlyGenerateEnemy(enemyList, 'wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
               else if(n >= 0.4 && n < 0.6)
-                randomlyGenerateEnemy('dragon',1400,Math.random()*30 + 200,-0.6,87,46,[{x:461,y:47,w:84,h:45}],3,'right',2,       8,     0);
+                randomlyGenerateEnemy(enemyList, 'dragon',1400,Math.random()*30 + 200,-0.6,87,46,[{x:461,y:47,w:84,h:45}],3,'right',2,       8,     0);
               else if(n >= 0.6 && n < 0.8)
-                randomlyGenerateEnemy('blob',   1400,  370,  -1.6,  80,80, [{x:749,y:80,w:80,h:80}],5,'right',         2,        20,    8);
+                randomlyGenerateEnemy(enemyList, 'blob',   1400,  370,  -1.6,  80,80, [{x:749,y:80,w:80,h:80}],5,'right',         2,        20,    8);
               else
-                randomlyGenerateEnemy('digger',Math.random()*90+1015, 460, -1.2,55,55,[{x:830,y:55,w:55,h:55}], 3, 'right',  1, 7,     5);
+                randomlyGenerateEnemy(enemyList, 'digger',Math.random()*90+1015, 460, -1.2,55,55,[{x:830,y:55,w:55,h:55}], 3, 'right',  1, 7,     5);
               }
             }
           }
@@ -651,9 +551,9 @@ const Game = () => {
               if(enemyList[key].category === 'finalboss'){
                 
                 if(enemyList[key].side === 'left')
-                  generateEnemyBullet(enemyList[key].x,enemyList[key].y,enemyList[key],'left');
+                  generateEnemyBullet(enemyBulletList, enemyList[key].x,enemyList[key].y,enemyList[key],'left', player1);
                 else
-                  generateEnemyBullet(enemyList[key].x,enemyList[key].y,enemyList[key],'right');
+                  generateEnemyBullet(enemyBulletList, enemyList[key].x,enemyList[key].y,enemyList[key],'right', player1);
               }
             }
           }
@@ -666,7 +566,7 @@ const Game = () => {
       
         //UPGRADE
           if(frameCount % upgrade_frequency === 0 && continue_update){ //1800  //1580
-            randomlyGenerateUpgrade();
+            randomlyGenerateUpgrade(upgradeList, frameCount);
           }
       
           for(let key in upgradeList){
@@ -741,20 +641,20 @@ const Game = () => {
       
           //GIVEN UPGRADES
           if(frameCount === 30) 
-            randomlyGenerateUpgrade('poison', [{x:130,y:125,w:35,h:35}])
+            randomlyGenerateUpgrade(upgradeList, frameCount, 'poison', [{x:130,y:125,w:35,h:35}])
           if(frameCount === 8000)
-            randomlyGenerateUpgrade('recharge',[{x:130,y:20,w:35,h:35}]);
+            randomlyGenerateUpgrade(upgradeList, frameCount, 'recharge',[{x:130,y:20,w:35,h:35}]);
           if(frameCount === 11500)
-            randomlyGenerateUpgrade('recharge',[{x:130,y:20,w:35,h:35}]);
+            randomlyGenerateUpgrade(upgradeList, frameCount, 'recharge',[{x:130,y:20,w:35,h:35}]);
           if(frameCount === 11200)
-            randomlyGenerateUpgrade('poison',[{x:130,y:55,w:35,h:35}]);
+            randomlyGenerateUpgrade(upgradeList, frameCount, 'poison',[{x:130,y:55,w:35,h:35}]);
       
           //if(frameCount === 60)
-          //	randomlyGenerateUpgrade('special_attack',[{x:130,y:161,w:35,h:35}]);
+          //	randomlyGenerateUpgrade(upgradeList, frameCount, 'special_attack',[{x:130,y:161,w:35,h:35}]);
           //if(frameCount === 60)
-          //	randomlyGenerateUpgrade('poison',[{x:130,y:55,w:35,h:35}]);
+          //	randomlyGenerateUpgrade(upgradeList, frameCount, 'poison',[{x:130,y:55,w:35,h:35}]);
           //if(frameCount === 60)
-          //	randomlyGenerateUpgrade('recharge',[{x:130,y:20,w:35,h:35}]);
+          //	randomlyGenerateUpgrade(upgradeList, frameCount, 'recharge',[{x:130,y:20,w:35,h:35}]);
       
         //COLLISION
           for(let key in enemyList){
@@ -884,6 +784,8 @@ const Game = () => {
           ctx.fillText('TOWER LIFE',640,40);
       
           if(towerLife === 0){
+            setGameOver(true)
+            setFinalScore(score)
             player1.spdX = 0;
             player1.spdY = 0;
             continue_update = false;
@@ -906,6 +808,8 @@ const Game = () => {
         requestAnimationFrame(gameLoop);
       
         function startNewGame() {
+            setGameOver(false)
+            setFinalScore(0)
             player1.spdX = 7;
             player1.spdY = 15;
             player1.x = 555;
@@ -939,11 +843,16 @@ const Game = () => {
             poison_active = false;
             
         }
-    }, [])
+    }, [setFinalScore, setGameOver])
 
     return (
         <div>
             <canvas id="ctx" width="1400" height="600"></canvas>
+            <div>
+                {
+                  gameOver ? <Register />: "Playing"
+                }
+            </div>
         </div>
     )
 }
