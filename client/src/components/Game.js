@@ -1,4 +1,9 @@
 import React, { useEffect } from "react"
+import Player from "../game/classes/Player"
+import Enemy from "../game/classes/Enemy"
+import Upgrade from "../game/classes/Upgrade"
+import Bullet from "../game/classes/Bullet"
+import EnemyBullet from "../game/classes/EnemyBullet"
 
 const Game = () => {
 
@@ -174,51 +179,10 @@ const Game = () => {
         document.addEventListener('keyup', keyUpHandler, false);
       
         //PLAYER
-        class Character {
-            constructor(x,y,sprites,punch) {
-                this.x = x;
-                this.y = y;
-                this.w = 65;
-                this.h = 65;
-                this.spdX = 7;
-                this.spdY = 15;
-                this.attackSpd = 5;        //quanto e' veloce un pugno
-                this.attack_timer = 30;    //ogni quanto puo tirare un pugno
-                this.img = tileset;
-            
-                //this.sprites = {};
-                this.sprites = sprites;
-                this.punch = punch;
-                this.aimAngle = 0;
-            }      
-        }
-        var player1 = new Character(555,385,[{x:0,y:0,w:65,h:65},{x:0,y:65,w:65,h:65}],     [{x:130,y:0,w:70,h:19},{x:200,y:0,w:70,h:19}]);
+        
+        var player1 = new Player(555,385,[{x:0,y:0,w:65,h:65},{x:0,y:65,w:65,h:65}],     [{x:130,y:0,w:70,h:19},{x:200,y:0,w:70,h:19}]);
       
         //ENEMIES
-      
-        class Enemy {
-          constructor(id, x, y, spdX, spdY, w, h, sprites,hp, toRemove,atTower,check,side, power,category,score,push) {
-            this.x = x;
-            this.spdX = spdX;
-            this.y = y;
-            this.spdY = spdY;
-            this.id = id;
-            this.w =  w;
-            this.h =  h;
-            this.sprites =  sprites;
-            this.hp =  hp;
-            this.toRemove =  toRemove;
-            this.atTower =  atTower;
-            this.check =  check;
-            this.side =  side;
-            this.power =  power;
-            this.score =  score;        //di quanto fa aumentare lo score quando viene ucciso
-            this.push =  push;          //quanto indietreggia quando viene colpito col pugno
-            this.category =  category
-          }
-
-          //enemyList[this.id] = this;
-        }
       
         function randomlyGenerateEnemy (category,x,y,spdX,w,h,sprites,hp, side, power, score, push){
             var id = Math.random();
@@ -235,21 +199,6 @@ const Game = () => {
         }
       
         //UPGRADES
-      
-        class Upgrade {
-          constructor(id, x, y, spdX, spdY, w, h, category, sprites) {
-              this.x = x;
-              this.spdX = spdX;
-              this.y = y;
-              this.spdY = spdY;
-              this.id = id;
-              this.w = w;
-              this.h = h;
-              this.category = category;
-              this.sprites = sprites;
-          }
-
-        }
       
         function randomlyGenerateUpgrade (c,s){
             var x = Math.random() < 0.5 ? Math.random()*400 + 100 : Math.random()*400 + 900;						//Math.random() * 1200 + 100;
@@ -360,24 +309,6 @@ const Game = () => {
             }
         }
       
-        class Bullet {
-          constructor(id, x, y, spdX, spdY, w, h,cannon,toRemove) {
-            this.type ='bullet';
-            this.x =x;
-            this.spdX =spdX;
-            this.y =y;
-            this.spdY =spdY;
-            this.name ='E';
-            this.id =id;
-            this.w = w;
-            this.h = h;
-            this.cannon = cannon;
-            this.toRemove = toRemove;
-            this.color = 'black';
-            this.timer = 0;
-          }
-        }
-      
         function generateBullet (actor, x,y,cannon,overwriteAngle){
             var h = 15;    
             var w = 15;
@@ -406,21 +337,6 @@ const Game = () => {
             var spdY = Math.sin(angle/180*Math.PI)*5;
             bulletList[id] = new Bullet(id,x,y,spdX,spdY,w,h,cannon,toRemove)
             //Bullet(id,x,y,spdX,spdY,w,h,cannon,toRemove);
-        }
-      
-        class EnemyBullet {
-          constructor(id, x, y, spdX, spdY, w, h, toRemove,side) {
-           this.x =x;
-           this.spdX =spdX;
-           this.y =y;
-           this.spdY =spdY;
-           this.id =id;
-           this.w = w;
-           this.h = h;
-           this.toRemove = toRemove;
-           this.side = side;
-           this.timer = 0;
-          }
         }
       
         function generateEnemyBullet (x,y,entity,side){
