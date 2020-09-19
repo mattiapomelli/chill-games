@@ -19,5 +19,20 @@ export default class Enemy {
       this.category =  category
     }
 
-    //enemyList[this.id] = this;
+    jump() {
+        this.y -= this.spdY;
+        this.spdY --;
+        if(this.spdY < -16)
+          this.spdY = -16;
+
+        if(this.y >= 370){
+          this.y = 370;
+          if(Math.random() < 0.3){
+            this.spdY = 23;
+          }
+          else{
+            this.spdY = 12;
+          }
+        }
+    }
   }
