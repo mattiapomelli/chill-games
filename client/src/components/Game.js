@@ -44,7 +44,7 @@ const Game = () => {
         var timer_sick = 0;
       
         var enemyList = {};
-        var enemiesAtTower = 0;
+        //var enemiesAtTower = 0;
         var enemiesAtTowerLeft = 0;
         var enemiesAtTowerRight = 0;
         var bulletList = {};
@@ -72,7 +72,7 @@ const Game = () => {
         var mouseX;
         var mouseY;
         var poison_x;
-        var poison_y;
+        //var poison_y;
         var placing_poison = false;
         var poison_placed = false;
         var got_poison = false;
@@ -88,19 +88,19 @@ const Game = () => {
       
         //IMAGES
         let tileset = new Image();
-        tileset.src = 'tileset8.png';
+        tileset.src = 'images/tileset8.png';
         let tower = new Image();
-        tower.src = 'cannontower.png';
+        tower.src = 'images/cannontower.png';
         let bullet_rect = new Image();
-        bullet_rect.src = 'rectbullet.png';
+        bullet_rect.src = 'images/rectbullet.png';
         let poison = new Image();
-        poison.src = 'poison.png';
+        poison.src = 'images/poison.png';
         let poison2 = new Image();
-        poison2.src = 'poison2.png';
+        poison2.src = 'images/poison2.png';
         let background = new Image();
-        background.src = 'background2.png';
+        background.src = 'images/background2.png';
         let enemybullet = new Image();
-        enemybullet.src = 'enemybullet.png';
+        enemybullet.src = 'images/enemybullet.png';
       
         //HANDLE KEYS
         function keyDownHandler(event){
@@ -196,71 +196,62 @@ const Game = () => {
       
         //ENEMIES
       
-        function Enemy (id, x, y, spdX, spdY, w, h, sprites,hp, toRemove,atTower,check,side, power,category,score,push){
-            var enemy = {
-                x:x,
-                spdX:spdX,
-                y:y,
-                spdY:spdY,
-                id:id,
-                w: w,
-                h: h,
-                sprites: sprites,
-                hp: hp,
-                toRemove: toRemove,
-                atTower: atTower,
-                check: check,
-                side: side,
-                power: power,
-                score: score,        //di quanto fa aumentare lo score quando viene ucciso
-                push: push,          //quanto indietreggia quando viene colpito col pugno
-                category: category,      
-            };
-            enemyList[id] = enemy;
+        class Enemy {
+          constructor(id, x, y, spdX, spdY, w, h, sprites,hp, toRemove,atTower,check,side, power,category,score,push) {
+            this.x = x;
+            this.spdX = spdX;
+            this.y = y;
+            this.spdY = spdY;
+            this.id = id;
+            this.w =  w;
+            this.h =  h;
+            this.sprites =  sprites;
+            this.hp =  hp;
+            this.toRemove =  toRemove;
+            this.atTower =  atTower;
+            this.check =  check;
+            this.side =  side;
+            this.power =  power;
+            this.score =  score;        //di quanto fa aumentare lo score quando viene ucciso
+            this.push =  push;          //quanto indietreggia quando viene colpito col pugno
+            this.category =  category
+          }
+
+          //enemyList[this.id] = this;
         }
       
         function randomlyGenerateEnemy (category,x,y,spdX,w,h,sprites,hp, side, power, score, push){
-            var x = x;
-            var y = y;
-            var h = h;
-            var w = w;
             var id = Math.random();
-            var spdX = spdX;
+            var spdY;
             if(category === 'blob')
-            var spdY = 12;
+              spdY = 12;
             else
-            var spdY = 0;
-            var power = power
-            var sprites = sprites;
-            var hp = hp;
+              spdY = 0;
             var toRemove = false;
             var atTower = false;
             var check = true;
-            var side = side;
-            var category = category;
-            var score = score;
-            var push = push;
-            Enemy(id,x,y,spdX,spdY,w,h,sprites,hp,toRemove,atTower,check, side, power,category,score,push);
+
+            enemyList[id] = new Enemy(id,x,y,spdX,spdY,w,h,sprites,hp,toRemove,atTower,check, side, power,category,score,push);
         }
       
         //UPGRADES
       
-        let Upgrade = function (id, x, y, spdX, spdY, w, h, category, sprites){
-            var upgrade = {
-                x:x,
-                spdX:spdX,
-                y:y,
-                spdY:spdY,
-                id:id,
-                w:w,
-                h:h,
-                category: category,
-                sprites: sprites,
-            };
-            upgradeList[id] = upgrade;
+        class Upgrade {
+          constructor(id, x, y, spdX, spdY, w, h, category, sprites) {
+              this.x = x;
+              this.spdX = spdX;
+              this.y = y;
+              this.spdY = spdY;
+              this.id = id;
+              this.w = w;
+              this.h = h;
+              this.category = category;
+              this.sprites = sprites;
+          }
+
         }
       
-        let randomlyGenerateUpgrade = function(c,s){
+        function randomlyGenerateUpgrade (c,s){
             var x = Math.random() < 0.5 ? Math.random()*400 + 100 : Math.random()*400 + 900;						//Math.random() * 1200 + 100;
             var y = Math.random()*20 + 275;
             var h = 35;     //between 10 and 40
@@ -268,71 +259,73 @@ const Game = () => {
             var id = Math.random();
             var spdX = 0;
             var spdY = 0;
+            var category;
+            var sprites;
             
             if(frameCount <= 7000){     //<=7000
-            var n = Math.random();
-            if(n < 0.4){   //0.4
-                var category = 'recharge';
-                var sprites = [{x:130,y:20,w:35,h:35}];
-            }
-            else if(n >= 0.4 && n < 0.8){
-                var category = 'poison';
-                var sprites = [{x:130,y:56,w:35,h:35}];
-            }
-            else {
-                var category = 'attackspeed';
-                var sprites = [{x:130,y:90,w:35,h:35}];
-            }
+              let n = Math.random();
+              if(n < 0.4){   //0.4
+                  category = 'recharge';
+                  sprites = [{x:130,y:20,w:35,h:35}];
+              }
+              else if(n >= 0.4 && n < 0.8){
+                  category = 'poison';
+                  sprites = [{x:130,y:56,w:35,h:35}];
+              }
+              else {
+                  category = 'attackspeed';
+                  sprites = [{x:130,y:90,w:35,h:35}];
+              }
             }
 
             if(frameCount > 7000 && frameCount <= 11500){
-            var n = Math.random();
-            if(n < 0.5){
-                var category = 'recharge';
-                var sprites = [{x:130,y:20,w:35,h:35}];
-            }
-            else if(n >=0.5 && n < 0.9){
-                var category = 'jump';
-                var sprites = [{x:130,y:125,w:35,h:35}]
-            }
-            else if(n >=0.9 && n < 0.95){
-                var category = 'poison';
-                var sprites = [{x:130,y:55,w:35,h:35}];
-            }
-            else {
-                var category = 'attackspeed';
-                var sprites = [{x:130,y:90,w:35,h:35}];
-            }
+              let n = Math.random();
+              if(n < 0.5){
+                  category = 'recharge';
+                  sprites = [{x:130,y:20,w:35,h:35}];
+              }
+              else if(n >=0.5 && n < 0.9){
+                  category = 'jump';
+                  sprites = [{x:130,y:125,w:35,h:35}]
+              }
+              else if(n >=0.9 && n < 0.95){
+                  category = 'poison';
+                  sprites = [{x:130,y:55,w:35,h:35}];
+              }
+              else {
+                  category = 'attackspeed';
+                  sprites = [{x:130,y:90,w:35,h:35}];
+              }
             }
 
             if(frameCount > 11500){
-            var n = Math.random();
-            if(n < 0.1){
-                var category = 'jump';
-                var sprites = [{x:130,y:125,w:35,h:35}]
-            }
-            else if(n >= 0.1 && n < 0.3){
-                var category = 'recharge';
-                var sprites = [{x:130,y:20,w:35,h:35}];
-            }
-            else if(n >= 0.3 && n < 0.5){
-                var category = 'attackspeed';
-                var sprites = [{x:130,y:90,w:35,h:35}];
-            }
-            else{
-                var category = 'special_attack';
-                var sprites = [{x:130,y:161,w:35,h:35}];
-            }
+              var n = Math.random();
+              if(n < 0.1){
+                  category = 'jump';
+                  sprites = [{x:130,y:125,w:35,h:35}]
+              }
+              else if(n >= 0.1 && n < 0.3){
+                  category = 'recharge';
+                  sprites = [{x:130,y:20,w:35,h:35}];
+              }
+              else if(n >= 0.3 && n < 0.5){
+                  category = 'attackspeed';
+                  sprites = [{x:130,y:90,w:35,h:35}];
+              }
+              else{
+                  category = 'special_attack';
+                  sprites = [{x:130,y:161,w:35,h:35}];
+              }
             }
 
             if(c !== undefined && s!== undefined){
-            category = c;
-            sprites = s;
+              category = c;
+              sprites = s;
+            }
+
+            upgradeList[id] = new Upgrade(id,x,y,spdX,spdY,w,h,category,sprites)
+            //Upgrade(id,x,y,spdX,spdY,w,h,category,sprites);
         }
-
-
-            Upgrade(id,x,y,spdX,spdY,w,h,category,sprites);
-          }
       
         //BULLETS
         document.onmousemove = function(mouse){
@@ -363,37 +356,32 @@ const Game = () => {
       
             if(placing_poison){
               poison_x = mouseX + 440;
-              poison_y = mouseY + 185;
+              //poison_y = mouseY + 185;
             }
         }
       
-        let Bullet = function (id, x, y, spdX, spdY, w, h,cannon,toRemove){
-            var upgrade = {
-                type:'bullet',
-                x:x,
-                spdX:spdX,
-                y:y,
-                spdY:spdY,
-                name:'E',
-                id:id,
-                w: w,
-                h: h,
-                cannon: cannon,
-                toRemove: toRemove,
-                color: 'black',
-                timer: 0,
-            };
-            bulletList[id] = upgrade;
-            //console.log(bulletList);
+        class Bullet {
+          constructor(id, x, y, spdX, spdY, w, h,cannon,toRemove) {
+            this.type ='bullet';
+            this.x =x;
+            this.spdX =spdX;
+            this.y =y;
+            this.spdY =spdY;
+            this.name ='E';
+            this.id =id;
+            this.w = w;
+            this.h = h;
+            this.cannon = cannon;
+            this.toRemove = toRemove;
+            this.color = 'black';
+            this.timer = 0;
+          }
         }
       
-        let generateBullet = function(actor, x,y,cannon,overwriteAngle){
-            var x = x;
-            var y = y;
+        function generateBullet (actor, x,y,cannon,overwriteAngle){
             var h = 15;    
             var w = 15;
             var id = Math.random();
-            var cannon = cannon;
             var toRemove = false;
       
             var angle = actor.aimAngle;
@@ -407,7 +395,7 @@ const Game = () => {
                 if(angle >= 0 && angle < 130)
                   angle = 130;
             }
-            else if(cannon = 'two'){
+            else if(cannon === 'two'){
                 if(angle > 55 && angle <= 180)
                   angle = 55;
                 if(angle < -6)
@@ -416,33 +404,30 @@ const Game = () => {
       
             var spdX = Math.cos(angle/180*Math.PI)*5;   //convert angle in radiants
             var spdY = Math.sin(angle/180*Math.PI)*5;
-            Bullet(id,x,y,spdX,spdY,w,h,cannon,toRemove);
+            bulletList[id] = new Bullet(id,x,y,spdX,spdY,w,h,cannon,toRemove)
+            //Bullet(id,x,y,spdX,spdY,w,h,cannon,toRemove);
         }
       
-        let EnemyBullet = function (id, x, y, spdX, spdY, w, h, toRemove,side){
-            var upgrade = {
-                x:x,
-                spdX:spdX,
-                y:y,
-                spdY:spdY,
-                id:id,
-                w: w,
-                h: h,
-                toRemove: toRemove,
-                side: side,
-                timer: 0,
-            };
-            enemyBulletList[id] = upgrade;
+        class EnemyBullet {
+          constructor(id, x, y, spdX, spdY, w, h, toRemove,side) {
+           this.x =x;
+           this.spdX =spdX;
+           this.y =y;
+           this.spdY =spdY;
+           this.id =id;
+           this.w = w;
+           this.h = h;
+           this.toRemove = toRemove;
+           this.side = side;
+           this.timer = 0;
+          }
         }
       
-        let generateEnemyBullet = function(x,y,entity,side){
-            var x = x + 125;
-            var y = y + 160;
+        function generateEnemyBullet (x,y,entity,side){
             var h = 15;    
             var w = 15;
             var id = Math.random();
             var toRemove = false;
-            var side = side;
 
             var angle = Math.atan2(player1.y - y, player1.x - x) / Math.PI * 180;
 
@@ -450,7 +435,8 @@ const Game = () => {
             //var spdY = (player1.y - entity.y) % 1000;
             var spdX = Math.cos(angle/180*Math.PI)*5;   //convert angle in radiants
             var spdY = Math.sin(angle/180*Math.PI)*5;
-            EnemyBullet(id,x,y,spdX,spdY,w,h,toRemove,side);
+            enemyBulletList[id] = new EnemyBullet(id,x + 125,y + 160,spdX,spdY,w,h,toRemove,side);
+            //EnemyBullet(id,x,y,spdX,spdY,w,h,toRemove,side);
         }
       
         document.onclick = function(mouse){   //on left click
@@ -734,7 +720,9 @@ const Game = () => {
         let draw = function() {
           ctx.clearRect(0,0,canvas.width,canvas.height);
           ctx.font = '20px Arial';
-          frameCount++;
+          if(towerLife > 0)
+		        frameCount++;
+	        //ctx.fillText(frameCount,400,100);
       
           if(got_poison){
             ctx.fillStyle = 'white';
@@ -799,13 +787,15 @@ const Game = () => {
           //	enemy_frequency = 180;
           if(frameCount === 13500)
             enemy_frequency = 240;
+          if(frameCount === 18000)
+            enemy_frequency = 180;
       
         //ENEMIES
           if(frameCount % enemy_frequency === 0){ 
           if(Math.random() < 0.5){								
                               //category,  x,     y,   spdX,  w, h,   sprites,  			   hp,   side,    power,  score,    push
           if(left){
-            var n = Math.random();
+            let n = Math.random();
       
             if(frameCount <= 2000)
                 randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
@@ -841,13 +831,25 @@ const Game = () => {
               left = false;
               right = false;
             }
+            if(frameCount > 18000){
+              if(n < 0.2)
+                randomlyGenerateEnemy('zombie',  -65,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);
+              else if(n >= 0.2 && n < 0.4)
+                randomlyGenerateEnemy('wolf',    -70,   380,    2,   70, 70, [{x:270,y:0,w:70,h:70}], 6,   'left',     2,       15,     20);
+              else if(n >= 0.4 && n < 0.6)
+                randomlyGenerateEnemy('dragon',  -87,Math.random()*30 + 200,0.6, 87,46,[{x:461,y:0,w:84,h:45}],3,'left',2,       8,      2);
+              else if(n >= 0.6 && n < 0.8)
+                randomlyGenerateEnemy('blob',   -80,  370,  1.6,  80,80, [{x:749,y:0,w:80,h:80}],5,     'left',        2,        20,    8);
+              else
+                randomlyGenerateEnemy('digger',Math.random()*90+240, 460,    1.2,  55,55,  [{x:830,y:0,w:55,h:55}], 3, 'left',  1, 7,   5);
+              }
             }
           }
       
           else{
           if(right){
       
-            var n = Math.random();
+            let n = Math.random();
       
             if(frameCount < 2000)
                 randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
@@ -883,6 +885,18 @@ const Game = () => {
               left = false;
               right = false;
             }
+            if(frameCount > 18000){
+              if(n < 0.2)
+                randomlyGenerateEnemy('zombie',   1400, 385,  -0.7,   65,65, [{x:65,y:64,w:65,h:65}], 4,   'right',    1,        5,     10);
+              else if(n >= 0.2 && n < 0.4)
+                randomlyGenerateEnemy('wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
+              else if(n >= 0.4 && n < 0.6)
+                randomlyGenerateEnemy('dragon',1400,Math.random()*30 + 200,-0.6,87,46,[{x:461,y:47,w:84,h:45}],3,'right',2,       8,     0);
+              else if(n >= 0.6 && n < 0.8)
+                randomlyGenerateEnemy('blob',   1400,  370,  -1.6,  80,80, [{x:749,y:80,w:80,h:80}],5,'right',         2,        20,    8);
+              else
+                randomlyGenerateEnemy('digger',Math.random()*90+1015, 460, -1.2,55,55,[{x:830,y:55,w:55,h:55}], 3, 'right',  1, 7,     5);
+              }
             }
           }
           enemies_generated++;
@@ -890,12 +904,12 @@ const Game = () => {
       
           //console.log(tower_start);
           //console.log(tower_end);
-          for(var key in enemyList){
+          for(let key in enemyList){
             tower_distance_left = enemiesAtTowerLeft * 30;
             tower_distance_right = enemiesAtTowerRight * 30;
       
             //if(enemyList[key].category === 'finalboss')
-              //ctx.fillRect(enemyList[key].x, enemyList[key].y - 30, enemyList[key].hp * 3, 15);
+            ctx.fillRect(enemyList[key].x, enemyList[key].y - 30, enemyList[key].hp * 10, 15);  //enemy hp bar
       
       
             if(enemyList[key].category === 'finalboss' && boss_shooting && continue_update)
@@ -936,7 +950,7 @@ const Game = () => {
               //}
       
               damage += enemyList[key].power;
-              enemiesAtTower = enemiesAtTowerRight + enemiesAtTowerLeft;
+              //enemiesAtTower = enemiesAtTowerRight + enemiesAtTowerLeft;
               enemyList[key].atTower = false;
               enemyList[key].check = false;
             }	
@@ -1003,7 +1017,7 @@ const Game = () => {
       
       
           if(frameCount % 120 === 0 && continue_update){
-            for(var key in enemyList){
+            for(let key in enemyList){
               if(enemyList[key].category === 'finalboss'){
                 
                 if(enemyList[key].side === 'left')
@@ -1014,7 +1028,7 @@ const Game = () => {
             }
           }
       
-          for(var key in enemyBulletList){
+          for(let key in enemyBulletList){
             if(continue_update)
               updateEntityPosition(enemyBulletList[key]);
             ctx.drawImage(enemybullet, enemyBulletList[key].x,enemyBulletList[key].y,35,35);
@@ -1025,11 +1039,11 @@ const Game = () => {
             randomlyGenerateUpgrade();
           }
       
-          for(var key in upgradeList){
+          for(let key in upgradeList){
             ctx.drawImage(tileset,
               upgradeList[key].sprites[0].x,upgradeList[key].sprites[0].y,upgradeList[key].sprites[0].w,upgradeList[key].sprites[0].h,
               upgradeList[key].x,upgradeList[key].y,upgradeList[key].w,upgradeList[key].h);
-            var isColliding = testCollisionEntity2(player1, upgradeList[key]);
+            let isColliding = testCollisionEntity2(player1, upgradeList[key]);
             if(isColliding){
               
               if(upgradeList[key].category === 'recharge'){
@@ -1111,9 +1125,9 @@ const Game = () => {
           //	randomlyGenerateUpgrade('recharge',[{x:130,y:20,w:35,h:35}]);
       
         //COLLISION
-          for(var key in enemyList){
-            for(var key2 in bulletList){
-              var isColliding = testCollisionEntity(enemyList[key], bulletList[key2])
+          for(let key in enemyList){
+            for(let key2 in bulletList){
+              let isColliding = testCollisionEntity(enemyList[key], bulletList[key2])
               if(isColliding){
                 bulletList[key2].toRemove = true;
                 enemyList[key].hp --;
@@ -1135,7 +1149,7 @@ const Game = () => {
                 }*/
       
               if(poison_placed){
-                if(enemyList[key].x + enemyList[key].w > poison_x && enemyList[key].x < poison_x + 400 && enemyList[key].category != 'dragon' && enemyList[key].category != 'bossdragon'){
+                if(enemyList[key].x + enemyList[key].w > poison_x && enemyList[key].x < poison_x + 400 && enemyList[key].category !== 'dragon' && enemyList[key].category !== 'bossdragon'){
                   if(frameCount % 60 === 0 && continue_update)
                     enemyList[key].hp --;
               }
@@ -1152,7 +1166,7 @@ const Game = () => {
             timer_sick = 0;
           }
       
-          for(var key in enemyBulletList){
+          for(let key in enemyBulletList){
           var isColliding = testCollisionEntity2(player1, enemyBulletList[key])
           if (isColliding){
                 console.log('colliding' + isColliding);
@@ -1190,7 +1204,7 @@ const Game = () => {
           }
       
         //DELETE ENEMIES AND BULLETS
-          for(var key in enemyList){
+          for(let key in enemyList){
             if(enemyList[key].toRemove){
               
               if(enemyList[key].check === false){ 
@@ -1199,7 +1213,7 @@ const Game = () => {
                 else
                   enemiesAtTowerRight --;
               damage -= enemyList[key].power;
-              enemiesAtTower = enemiesAtTowerRight + enemiesAtTowerLeft;
+              //enemiesAtTower = enemiesAtTowerRight + enemiesAtTowerLeft;
               }
               //if(enemiesAtTower < 0)
                 //enemiesAtTower = 0;
@@ -1215,7 +1229,7 @@ const Game = () => {
       
               delete enemyList[key];		}
           }
-          for(var key in bulletList){
+          for(let key in bulletList){
             if(bulletList[key].toRemove)
               delete bulletList[key];
           }
@@ -1241,7 +1255,7 @@ const Game = () => {
             player1.spdX = 0;
             player1.spdY = 0;
             continue_update = false;
-            for(var key in enemyList)
+            for(let key in enemyList)
               enemyList[key].spdX = 0;
             ctx.fillStyle = 'white';
             ctx.fillRect(560,160,275,60);
@@ -1274,7 +1288,7 @@ const Game = () => {
             bulletList = {};
             upgradeList = {};
             enemyBulletList = {};
-            enemiesAtTower = 0;
+            //enemiesAtTower = 0;
             enemiesAtTowerRight = 0;
             enemiesAtTowerLeft = 0;
             damage = 0;
