@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)           //if the user is authenticated
     const [isLoaded, setIsLoaded] = useState(false)                         //if the app is loaded
 
-    useEffect(()=>{                 
+    useEffect(()=>{                
         AuthService.isAuthenticated().then(data =>{
             setLoggedUser(data.loggedUser);
             setIsAuthenticated(data.isAuthenticated);

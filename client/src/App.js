@@ -5,7 +5,7 @@ import AuthService from './services/AuthService'
 import "./style.css"
 
 function App() {
-	const {loggedUser, setLoggedUser, setIsAuthenticated} = useContext(AuthContext)
+	const {loggedUser, setLoggedUser, setIsAuthenticated, isAuthenticated} = useContext(AuthContext)
 
 	const logOut = () => {
 		AuthService.logout().then(data => {
@@ -18,7 +18,7 @@ function App() {
 
   	return (
     	<div className="App">
-			<div>{loggedUser !== null ? loggedUser.username : "Guest"}</div>
+			<div>{isAuthenticated ? loggedUser.username : "Guest"}</div>
 			<button onClick={logOut}>Logout</button>
 			<Game />
     	</div>

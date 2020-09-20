@@ -14,7 +14,7 @@ const cookieExtractor = req => {
 passport.use(new JwtStrategy({
     jwtFromRequest: cookieExtractor,                    // function we provide to extract th JWT token from the request
     secretOrKey: "RandomCoder"                          // used to verify that the token is legitimate
-}, (payload, done) => {                                 // payload: data that we set within the jwt token
+}, (payload, done) => {                                 // payload: data that we set within the jwt token , the callback runs only if jwtFromRequest is not null
     User.findById({_id: payload.sub}, (err, user) => {  // payload.sub: subject whom the token refers to
         if(err)
             return done(err, false)

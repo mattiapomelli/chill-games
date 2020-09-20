@@ -4,10 +4,13 @@ import {testCollisionEntity, testCollisionEntity2 } from "../game/actions/collis
 import {randomlyGenerateEnemy, randomlyGenerateUpgrade, generateEnemyBullet } from "../game/actions/actions"
 import { GameContext } from '../context/GameContext'
 import Register from '../components/Register'
+import { AuthContext } from "../context/AuthContext"
+import axios from "axios"
 
 const Game = () => {
 
-    const {gameOver, setGameOver, setFinalScore } = useContext(GameContext)
+    const {gameOver, setGameOver, setFinalScore, finalScore } = useContext(GameContext)
+    const {isAuthenticated, loggedUser} = useContext(AuthContext)
 
     useEffect(() => {
         console.log('game started')
@@ -15,7 +18,31 @@ const Game = () => {
       
         var canvas = document.getElementById("ctx");
         var ctx = canvas.getContext('2d');
-        ctx.font = '20px Arial';
+
+        var buffer = document.createElement('canvas').getContext('2d')
+        let screen_h = document.documentElement.clientHeight;
+        let screen_w = document.documentElement.clientWidth;
+        buffer.canvas.height = 600;
+        buffer.canvas.width = 1400;
+        let map_ratio = 1400/600;
+        let map_scale = 1;
+
+        buffer.font = '20px Arial';
+
+        function scaleCanvas(){
+          screen_h = document.documentElement.clientHeight;
+          screen_w = document.documentElement.clientWidth;
+        
+          if(screen_h / buffer.canvas.height < screen_w / buffer.canvas.width) screen_w = screen_h * map_ratio;
+                else screen_h = screen_w / map_ratio;
+        
+          map_scale = screen_h / (600);
+        
+          canvas.height = screen_h;
+          canvas.width = screen_w;
+        
+          ctx.imageSmoothingEnabled = false;
+        }
       
         // timers
         var timer_a = 0;                  //timer per l'upgrade attackspeed
@@ -159,37 +186,36 @@ const Game = () => {
         document.addEventListener('keyup', keyUpHandler, false);
         
         // aim angle for bullets
-        document.onmousemove = function(mouse){
-      
-            mouseX = mouse.clientX;
-            mouseY = mouse.clientY;
-      
-            if(player1.x === 650 && player1.y === 183){
-              mouseX -= 630;
-              mouseY -= 220;
-            }
-            else if(player1.x === 685 && player1.y === 183){
-              mouseX -= 775;
-              mouseY -= 180;
-            }
-            else{
-            mouseX -= 700;
-            mouseY -= 200;
-            }
-      
-            player1.aimAngle = Math.atan2(mouseY, mouseX) / Math.PI * 180;
-            //if(player1.aimAngle < -170)
-                //player1.aimAngle = 170
-            //if(player1.aimAngle < 123 && player1.aimAngle > -)
-            //	player1.aimAngle = 123;
-      
-            //console.log('mousemove: ' + player1.aimAngle);
-      
-            if(placing_poison){
-              poison_x = mouseX + 440;
-              //poison_y = mouseY + 185;
-            }
-        }
+        canvas.addEventListener('mousemove', (event) => {
+
+          let boundary = event.target.getBoundingClientRect(); //getting mouse X and Y, and scaling them down so they fit buffer values
+    
+          mouseX = (event.pageX - boundary.left) / map_scale;
+          mouseY = (event.pageY - boundary.top) / map_scale;
+          //console.log(mouseX + "  ,  " + mouseY);
+          let mouseCannonDistX, mouseCannonDistY;
+    
+          if(player1.x === 650 && player1.y === 183){
+            mouseCannonDistX = mouseX - 625
+            mouseCannonDistY = mouseY - 220
+          }
+          else if(player1.x === 685 && player1.y === 183){
+            mouseCannonDistX = mouseX - 771
+            mouseCannonDistY = mouseY - 220
+          }
+          else{
+            mouseCannonDistX = mouseX - 698
+            mouseCannonDistY = mouseY - 220
+          }
+    
+          player1.aimAngle = Math.atan2(mouseCannonDistY, mouseCannonDistX) / Math.PI * 180;
+          //console.log('mousemove: ' + player1.aimAngle);
+    
+          if(placing_poison){
+            poison_x = mouseX + 440;
+          }
+      })
+        
         
         //bullet shooting
         document.onclick = function(mouse){   //on left click
@@ -227,45 +253,46 @@ const Game = () => {
         }
       
         function drawEntity (entity) {
-            ctx.save();
-            ctx.fillStyle = entity.color;
-            ctx.fillRect(entity.x - entity.w/2, entity.y - entity.h/2, entity.w, entity.h);
-            ctx.restore();
+            buffer.save();
+            buffer.fillStyle = entity.color;
+            buffer.fillRect(entity.x - entity.w/2, entity.y - entity.h/2, entity.w, entity.h);
+            buffer.restore();
         }
 
       
         //LOOP------------------------------------------------------------------------------------------------------------------------------------
         function gameLoop() {
-          ctx.clearRect(0,0,canvas.width,canvas.height);
-          ctx.font = '20px Arial';
+          buffer.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+          buffer.font = '20px Arial';
+          scaleCanvas();
           if(towerLife > 0)
 		        frameCount++;
-          ctx.fillText(frameCount,400,100);
+          buffer.fillText(frameCount,400,100);
           
           if(frameCount === 10)
           randomlyGenerateEnemy(enemyList, 'zombie',  300,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);   
 
       
           if(player1.got_poison){
-            ctx.fillStyle = 'white';
-            ctx.fillRect(1020,40,45,45);
-            ctx.drawImage(tileset,130,55,35,35,1030,50,25,25);
-            ctx.fillStyle = 'black';
-            ctx.fillText('P',1037,30);
+            buffer.fillStyle = 'white';
+            buffer.fillRect(1020,40,45,45);
+            buffer.drawImage(tileset,130,55,35,35,1030,50,25,25);
+            buffer.fillStyle = 'black';
+            buffer.fillText('P',1037,30);
           }
           if(player1.got_recharge){
-            ctx.fillStyle = 'white';
-            ctx.fillRect(960,40,45,45);
-            ctx.drawImage(tileset,130,20,35,35,970,50,25,25);
-            ctx.fillStyle = 'black';
-            ctx.fillText('R',977,30);
+            buffer.fillStyle = 'white';
+            buffer.fillRect(960,40,45,45);
+            buffer.drawImage(tileset,130,20,35,35,970,50,25,25);
+            buffer.fillStyle = 'black';
+            buffer.fillText('R',977,30);
           }
       
         //SCORE
-          ctx.fillStyle = 'red';
+          buffer.fillStyle = 'red';
           if(frameCount % 60 === 0 && continue_update)
             score++;
-          ctx.fillText('SCORE: ' + score,80,40);
+          buffer.fillText('SCORE: ' + score,80,40);
       
         //BULLETS
           for(var key in bulletList){
@@ -277,21 +304,21 @@ const Game = () => {
           if(player1.number_of_bullets === 0)
             player1.can_shoot = false;
       
-          ctx.fillStyle = 'red';
-          ctx.fillText('NUMBER OF BULLETS',1100,40);
-          ctx.fillStyle = 'white';
-          ctx.fillRect(1100,50,250,24);
-          ctx.fillStyle = '#EFCA55';
-          ctx.fillRect(1100,50,player1.number_of_bullets*5,24);
-          ctx.drawImage(bullet_rect,1100,50);
+          buffer.fillStyle = 'red';
+          buffer.fillText('NUMBER OF BULLETS',1100,40);
+          buffer.fillStyle = 'white';
+          buffer.fillRect(1100,50,250,24);
+          buffer.fillStyle = '#EFCA55';
+          buffer.fillRect(1100,50,player1.number_of_bullets*5,24);
+          buffer.drawImage(bullet_rect,1100,50);
       
         //DRAWING
-          ctx.drawImage(tower,575,200);
+          buffer.drawImage(tower,575,200);
             
           if(poison_active){
             if(poison_x === undefined)
               poison_x = mouseX + 440;
-            ctx.drawImage(poison,poison_x,440);
+            buffer.drawImage(poison,poison_x,440);
           }
       
         //ENEMY FREQUENCY
@@ -381,7 +408,7 @@ const Game = () => {
               else
                 randomlyGenerateEnemy(enemyList, 'wolf',     1400, 380,    -2,   70,70, [{x:270,y:70,w:70,h:70}], 6,  'right',    2,       15,     20);
             if(enemies_generated === 25){	
-                randomlyGenerateEnemy('bosszombie',1400, 330,  -0.5, 120,120, [{x:341,y:120,w:120,h:120}],30,'right',   10,      50,     5);
+                randomlyGenerateEnemy(enemyList,'bosszombie',1400, 330,  -0.5, 120,120, [{x:341,y:120,w:120,h:120}],30,'right',   10,      50,     5);
                 left = false;
               }
             if(frameCount > 7000 && frameCount <= 11700)
@@ -431,7 +458,7 @@ const Game = () => {
             tower_distance_right = enemiesAtTowerRight * 30;
       
             //if(enemyList[key].category === 'finalboss')
-            ctx.fillRect(enemyList[key].x, enemyList[key].y - 30, enemyList[key].hp * 10, 15);  //enemy hp bar
+            buffer.fillRect(enemyList[key].x, enemyList[key].y - 30, enemyList[key].hp * 10, 15);  //enemy hp bar
       
             let i;
             if(enemyList[key].category === 'finalboss' && boss_shooting && continue_update)
@@ -439,7 +466,7 @@ const Game = () => {
             else
               i = 0;
       
-            ctx.drawImage(tileset,
+            buffer.drawImage(tileset,
               enemyList[key].sprites[i].x,enemyList[key].sprites[i].y,enemyList[key].sprites[i].w,enemyList[key].sprites[i].h,
               enemyList[key].x,enemyList[key].y,enemyList[key].w,enemyList[key].h);
       
@@ -493,14 +520,14 @@ const Game = () => {
             if(player1.leftFace){
               player1.attackLeft(enemyList);
               if(player1.attack){
-                ctx.drawImage(tileset, player1.punch[1].x, player1.punch[1].y, player1.punch[1].w, player1.punch[1].h,
+                buffer.drawImage(tileset, player1.punch[1].x, player1.punch[1].y, player1.punch[1].w, player1.punch[1].h,
                   player1.x + player1.attack_x - 5, player1.y + player1.h/2 - 10, 70, 20);
               }
             }
             else{
               player1.attackRight(enemyList);
               if(player1.attack){
-                ctx.drawImage(tileset, player1.punch[0].x, player1.punch[0].y, player1.punch[0].w, player1.punch[0].h,
+                buffer.drawImage(tileset, player1.punch[0].x, player1.punch[0].y, player1.punch[0].w, player1.punch[0].h,
                   player1.x + player1.attack_x, player1.y + player1.h/2 - 10, 70, 20);
               }
             }
@@ -523,17 +550,17 @@ const Game = () => {
           if(continue_update){
             index = player1.leftFace ? 1 : 0
           }
-          ctx.drawImage(tileset,
+          buffer.drawImage(tileset,
             player1.sprites[index].x, player1.sprites[index].y, player1.sprites[index].w, player1.sprites[index].h,
             player1.x, player1.y, player1.w, player1.h);
       
           //DRAW BACKGROUND AND POISON
-          ctx.drawImage(background,0,0);
+          buffer.drawImage(background,0,0);
       
           if(poison_active){
             if(poison_x === undefined)
               poison_x = mouseX + 440;
-            ctx.drawImage(poison2,poison_x,449);
+            buffer.drawImage(poison2,poison_x,449);
           }
       
         //FINAL BOSS
@@ -561,7 +588,7 @@ const Game = () => {
           for(let key in enemyBulletList){
             if(continue_update)
               updateEntityPosition(enemyBulletList[key]);
-            ctx.drawImage(enemybullet, enemyBulletList[key].x,enemyBulletList[key].y,35,35);
+            buffer.drawImage(enemybullet, enemyBulletList[key].x,enemyBulletList[key].y,35,35);
           }
       
         //UPGRADE
@@ -570,7 +597,7 @@ const Game = () => {
           }
       
           for(let key in upgradeList){
-            ctx.drawImage(tileset,
+            buffer.drawImage(tileset,
               upgradeList[key].sprites[0].x,upgradeList[key].sprites[0].y,upgradeList[key].sprites[0].w,upgradeList[key].sprites[0].h,
               upgradeList[key].x,upgradeList[key].y,upgradeList[key].w,upgradeList[key].h);
             let isColliding = testCollisionEntity2(player1, upgradeList[key]);
@@ -727,7 +754,7 @@ const Game = () => {
           }
       
           if(player1.confused){
-            ctx.drawImage(tileset,0,130,65,40,player1.x,player1.y - 30,65,40);
+            buffer.drawImage(tileset,0,130,65,40,player1.x,player1.y - 30,65,40);
             confused_time ++;
             if(confused_time === 360){
               player1.confused = false;
@@ -775,31 +802,31 @@ const Game = () => {
           //console.log('zombies: ' + enemiesAtTower);
           //console.log('life; ' + towerLife);
       
-          ctx.fillStyle = 'black';
-          ctx.fillRect(598,48,204,24);
-          ctx.fillStyle = 'white';
-          ctx.fillRect(600,50,200,20);
-          ctx.fillStyle = 'red';
-          ctx.fillRect(600,50,towerLife*2,20);
-          ctx.fillText('TOWER LIFE',640,40);
+          buffer.fillStyle = 'black';
+          buffer.fillRect(598,48,204,24);
+          buffer.fillStyle = 'white';
+          buffer.fillRect(600,50,200,20);
+          buffer.fillStyle = 'red';
+          buffer.fillRect(600,50,towerLife*2,20);
+          buffer.fillText('TOWER LIFE',640,40);
       
           if(towerLife === 0){
-            setGameOver(true)
             setFinalScore(score)
+            setGameOver(true)
             player1.spdX = 0;
             player1.spdY = 0;
             continue_update = false;
             for(let key in enemyList)
               enemyList[key].spdX = 0;
-            ctx.fillStyle = 'white';
-            ctx.fillRect(560,160,275,60);
-            ctx.fillStyle = 'red';
-            ctx.fillText('GAME OVER',640,180);
-            ctx.font = '15px Arial';
-            ctx.fillText('Press SpaceBar to play again', 600,210);
+            buffer.fillStyle = 'white';
+            buffer.fillRect(560,160,275,60);
+            buffer.fillStyle = 'red';
+            buffer.fillText('GAME OVER',640,180);
+            buffer.font = '15px Arial';
+            buffer.fillText('Press SpaceBar to play again', 600,210);
             
           }
-      
+          ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
       
       
           requestAnimationFrame(gameLoop);	
@@ -845,12 +872,34 @@ const Game = () => {
         }
     }, [setFinalScore, setGameOver])
 
+    // useEffect(() => {
+    //   if(isAuthenticated && gameOver) {
+    //     if(finalScore > loggedUser.bestScore){
+    //       axios.put(`/user/${loggedUser._id}`, {
+    //         score: finalScore
+    //       }).then(res => console.log(res.data.message))
+    //     }
+    //   }
+    // }, [gameOver, isAuthenticated])
+
+    const updateUserScore = () => {
+      if(finalScore > loggedUser.bestScore) {
+        axios.put(`/user/${loggedUser._id}`, {
+          score: finalScore
+        }).then(res => {return res.data.message})
+      } else {
+        return "record not beated"
+      }
+    }
+
     return (
         <div>
-            <canvas id="ctx" width="1400" height="600"></canvas>
+            <canvas id="ctx"></canvas>
             <div>
                 {
-                  gameOver ? <Register />: "Playing"
+                  gameOver ?
+                    isAuthenticated ? updateUserScore() : <Register />
+                    : "Playing"
                 }
             </div>
         </div>

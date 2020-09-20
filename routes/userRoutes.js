@@ -42,15 +42,27 @@ userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res
 })
 
 //make sure our backend and our frontend is synched in, so that even if the user closes and visits the website again he'll still be logged in if he was authenticated
-userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),(req, res)=>{  
-    const {username, role, _id} = req.user
-    res.status(200).json({isAuthenticated: true, loggedUser: {username, role, _id}})
+userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),(req, res)=> {  
+    const {username, _id, bestScore} = req.user
+    res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
 })
 
 userRouter.get('/', (req, res) => {
     User.find()
     .then(users => res.json(users))
     .catch(err => res.status(400).json(err))
+})
+
+//update user's best score
+userRouter.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    User.findByIdAndUpdate(req.params.id, {bestScore: req.body.score}, (err, user) => {
+        if(err)
+            res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
+        if(!user)
+            return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
+
+        return res.status(200).json({message: {msgBody: "Best score updated", msgError: false}})
+    })
 })
 
 module.exports = userRouter

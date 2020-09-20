@@ -35,11 +35,7 @@ export default {
     },
     isAuthenticated: () => {    // we need this to sync components state about authentication with the backend
         return axios.get('/user/authenticated')
-            .then(res=>{
-                if(res.status !== 401)  //if we use passport middleware, passport sends status of 401 if we are not authenticated
-                    return res.data
-                else
-                    return {isAuthenticated: false, loggedUser: {username: "", _id:""}}
-            })
+            .then(res=> res.data)
+            .catch(err => {return {isAuthenticated: false, loggedUser: {username: "", _id:""}}})
     }
 }
