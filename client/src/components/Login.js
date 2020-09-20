@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext"
 
 const Login = (props) => {
     const [username, setUsername] = useState('')
-    const {setLoggedUser, setIsAuthenticated} = useContext(AuthContext)
+    const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const loginUser = (e) => {
         e.preventDefault()
@@ -19,6 +19,11 @@ const Login = (props) => {
         })
     }
 
+    const signAsGuest = () => {
+        setIsGuest(true);
+        props.history.push('/')
+    }
+
     const onChange = (e) => {
         setUsername(e.target.value)
     }
@@ -30,6 +35,9 @@ const Login = (props) => {
                 <input placeholder="Username" value={username} onChange={onChange}/>
                 <button type="submit">Submit</button>
             </form>
+            <button onClick={signAsGuest}>
+                Continue as a guest
+            </button>
         </div>
     )
 }

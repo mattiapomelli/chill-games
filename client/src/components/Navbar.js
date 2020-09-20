@@ -30,6 +30,8 @@ const Navbar = () => {
 			: <div>
 				<span>Guest</span>
 				<Link to="/login">Login</Link>
+				<Link to="/ranking">Ranking</Link>
+				<Link to="/">Play</Link>
 			</div>}
         </div>
     )

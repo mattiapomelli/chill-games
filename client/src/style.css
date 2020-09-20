@@ -16,3 +16,6 @@ canvas {
     margin: auto;
 }
 
+.current-user-item {
+    color: red;
+}

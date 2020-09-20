@@ -2,6 +2,8 @@ import React from 'react';
 import Game from "./components/Game"
 import Navbar from "./components/Navbar"
 import Login from "./components/Login"
+import Ranking from './components/Ranking';
+import PrivateRoute from './hocs/PrivateRoute'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 import "./style.css"
@@ -13,8 +15,9 @@ function App() {
     	<div className="App">
 		<Router>
 			<Navbar />
-			<Route exact path="/" component={Game}/>
+			<PrivateRoute exact path="/" component={Game}/>
 			<Route path="/login" component={Login}/>
+			<Route path="/ranking" component={Ranking}/>
 		</Router>
     	</div>
   	);

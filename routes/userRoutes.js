@@ -68,7 +68,7 @@ userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),
 })
 
 userRouter.get('/', (req, res) => {
-    User.find()
+    User.find().sort({bestScore: -1})
     .then(users => res.json(users))
     .catch(err => res.status(400).json(err))
 })
