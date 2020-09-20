@@ -43,7 +43,6 @@ userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res
 
 //make sure our backend and our frontend is synched in, so that even if the user closes and visits the website again he'll still be logged in if he was authenticated
 userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),(req, res)=>{  
-    console.log('auth')
     const {username, role, _id} = req.user
     res.status(200).json({isAuthenticated: true, loggedUser: {username, role, _id}})
 })

@@ -1,20 +1,22 @@
 import React, { useContext, useState } from "react"
-import axios from "axios"
+import AuthService from '../services/AuthService'
+import { AuthContext } from "../context/AuthContext"
 import { GameContext } from "../context/GameContext"
 
 const Register = () => {
     const [username, setUsername] = useState('')
     const {finalScore} = useContext(GameContext)
+    const {setLoggedUser, setIsAuthenticated} = useContext(AuthContext)
 
     const registerUser = (e) => {
         e.preventDefault()
-        axios.post('/user/register', {
-            username,
-            bestScore: finalScore
-        }).then(() => {
-            setUsername('')
-        }).catch(err => {
-            console.log(err)
+        const user = {username, bestScore: finalScore}
+        AuthService.register(user).then( data => {
+            const {isAuthenticated, loggedUser} = data
+            if(isAuthenticated){
+                setLoggedUser(loggedUser)
+                setIsAuthenticated(isAuthenticated)
+            }
         })
     }
 

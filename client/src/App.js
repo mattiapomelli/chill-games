@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Game from "./components/Game"
+import { AuthContext } from './context/AuthContext';
+import AuthService from './services/AuthService'
 import "./style.css"
 
 function App() {
+	const {loggedUser, setLoggedUser, setIsAuthenticated} = useContext(AuthContext)
+
+	const logOut = () => {
+		AuthService.logout().then(data => {
+			if(data.success){
+				setLoggedUser(data.user)        
+                setIsAuthenticated(false)
+			}
+		})
+	}
 
   	return (
     	<div className="App">
+			<div>{loggedUser !== null ? loggedUser.username : "Guest"}</div>
+			<button onClick={logOut}>Logout</button>
 			<Game />
     	</div>
   	);
