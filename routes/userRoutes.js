@@ -25,14 +25,34 @@ userRouter.post('/register', (req, res) => {
                 if(err)
                     res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
                 else {
-                    const {_id} = newUser
+                    const {_id, username, bestScore} = newUser
                     const token = signToken(_id)
                     res.cookie('access_token', token, {httpOnly: true, sameSite: true})
-                    res.status(200).json({isAuthenticated: true, loggedUser: {username, _id}})
+                    res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
                     //res.status(201).json({message: {msgBody: "Account successfully created", msgError: false}})
                 }
             })
         }
+    })
+})
+
+userRouter.post('/login', (req, res)=>{
+
+    const { username } = req.body
+    User.findOne({username}, (err, user) => {   //we look for the user
+        //  something went wrong with database
+        if(err)          
+            res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
+        // if no user exists
+        if(!user)
+            return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
+        // check if password is correct 
+
+        const {_id, username, bestScore} = user
+        const token = signToken(_id)
+        res.cookie('access_token', token, {httpOnly: true, sameSite: true})
+        res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
+
     })
 })
 

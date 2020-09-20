@@ -14,6 +14,9 @@ const Game = () => {
     useEffect(() => {
         console.log('game started')
         //VARIABLES
+        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
       
         let canvas, ctx;
         let buffer;
@@ -125,7 +128,6 @@ const Game = () => {
         //EVENT LISTENERS
         // key handlers
         function keyDownHandler(event){
-      
             if(player1.confused){
               keyCodeD = 65;
               keyCodeA = 68;
@@ -190,12 +192,9 @@ const Game = () => {
               player1.downPressed = false;
             }
         }
-      
-        document.addEventListener('keydown', keyDownHandler, false);
-        document.addEventListener('keyup', keyUpHandler, false);
-        
+
         // aim angle for bullets
-        canvas.addEventListener('mousemove', (event) => {
+        function mouseMoveHandler(event) {
 
           let boundary = event.target.getBoundingClientRect(); //getting mouse X and Y, and scaling them down so they fit buffer values
     
@@ -223,7 +222,11 @@ const Game = () => {
           if(placing_poison){
             poison_x = mouseX - 220;
           }
-      })
+        }
+      
+        document.addEventListener('keydown', keyDownHandler, false);
+        document.addEventListener('keyup', keyUpHandler, false);   
+        canvas.addEventListener('mousemove', mouseMoveHandler, false)
         
         
         //bullet shooting
@@ -268,6 +271,7 @@ const Game = () => {
             buffer.restore();
         }
 
+        var myRequest;
       
         //LOOP------------------------------------------------------------------------------------------------------------------------------------
         function gameLoop() {
@@ -838,10 +842,10 @@ const Game = () => {
           ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
       
       
-          requestAnimationFrame(gameLoop);	
+          myRequest = requestAnimationFrame(gameLoop);	
         }
       
-        requestAnimationFrame(gameLoop);
+        myRequest = requestAnimationFrame(gameLoop);
       
         function startNewGame() {
             setGameOver(false)
@@ -880,6 +884,17 @@ const Game = () => {
             poison_placed = false;
             
         }
+
+
+        return () => {
+          cancelAnimationFrame(myRequest)
+          document.removeEventListener('keydown', keyDownHandler);
+          document.removeEventListener('keyup', keyUpHandler);
+          canvas.removeEventListener('mousemove', mouseMoveHandler);
+          setFinalScore(0)
+          setGameOver(false)
+        }
+
     }, [setFinalScore, setGameOver])
 
     const updateUserScore = (score) => {

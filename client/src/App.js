@@ -1,34 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Game from "./components/Game"
-import { AuthContext } from './context/AuthContext';
-import AuthService from './services/AuthService'
+import Navbar from "./components/Navbar"
+import Login from "./components/Login"
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+
 import "./style.css"
 
-function App() {
-	const {loggedUser, setLoggedUser, setIsAuthenticated, isAuthenticated} = useContext(AuthContext)
 
-	const logOut = () => {
-		AuthService.logout().then(data => {
-			if(data.success){
-				setLoggedUser(data.user)        
-                setIsAuthenticated(false)
-			}
-		})
-	}
+function App() {
 
   	return (
     	<div className="App">
-			{isAuthenticated ?
-				<div>
-					<span>{loggedUser.username}</span>
-					<span>Your record is: {loggedUser.bestScore}</span>
-					<button onClick={logOut}>Logout</button>
-				</div>
-			: <div>
-				<span>Guest</span>
-				<button>Login</button>
-			</div>}
-			<Game />
+		<Router>
+			<Navbar />
+			<Route exact path="/" component={Game}/>
+			<Route path="/login" component={Login}/>
+		</Router>
     	</div>
   	);
 }
