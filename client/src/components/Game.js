@@ -8,30 +8,38 @@ import { AuthContext } from "../context/AuthContext"
 import axios from "axios"
 
 const Game = () => {
-
     const {gameOver, setGameOver, setFinalScore, finalScore } = useContext(GameContext)
-    const {isAuthenticated, loggedUser} = useContext(AuthContext)
+    const {isAuthenticated, loggedUser, setLoggedUser} = useContext(AuthContext)
 
     useEffect(() => {
         console.log('game started')
         //VARIABLES
       
-        var canvas = document.getElementById("ctx");
-        var ctx = canvas.getContext('2d');
+        let canvas, ctx;
+        let buffer;
 
-        var buffer = document.createElement('canvas').getContext('2d')
-        let screen_h = document.documentElement.clientHeight;
-        let screen_w = document.documentElement.clientWidth;
-        buffer.canvas.height = 600;
-        buffer.canvas.width = 1400;
+        let screen_h, screen_w;
+
         let map_ratio = 1400/600;
         let map_scale = 1;
 
+        canvas = document.getElementById("ctx");
+        ctx = canvas.getContext('2d')
+        ctx.imageSmoothingEnabled = false;
+
+        buffer = document.createElement('canvas').getContext('2d')
+        buffer.imageSmoothingEnabled = false;
         buffer.font = '20px Arial';
+
+        screen_h = document.documentElement.clientHeight
+        screen_w = document.documentElement.clientWidth;  // * 0.9
+
+        buffer.canvas.height = 600;
+        buffer.canvas.width = 1400;
 
         function scaleCanvas(){
           screen_h = document.documentElement.clientHeight;
-          screen_w = document.documentElement.clientWidth;
+          screen_w = document.documentElement.clientWidth;  // *0.9
         
           if(screen_h / buffer.canvas.height < screen_w / buffer.canvas.width) screen_w = screen_h * map_ratio;
                 else screen_h = screen_w / map_ratio;
@@ -42,6 +50,7 @@ const Game = () => {
           canvas.width = screen_w;
         
           ctx.imageSmoothingEnabled = false;
+          //ctx.imageSmoothingQuality = 'high';
         }
       
         // timers
@@ -71,7 +80,7 @@ const Game = () => {
     
         var continue_update = true;
         var frameCount = 0;
-        var score = 0;
+        var score = 200;
         var enemy_frequency = 300;
         var upgrade_frequency = 1580;
         var damage = 0;                 //quanto i mostri messi insieme tolgono alla torre ogni secondo
@@ -212,7 +221,7 @@ const Game = () => {
           //console.log('mousemove: ' + player1.aimAngle);
     
           if(placing_poison){
-            poison_x = mouseX + 440;
+            poison_x = mouseX - 220;
           }
       })
         
@@ -868,37 +877,37 @@ const Game = () => {
             left = true;
             
             poison_active = false;
+            poison_placed = false;
             
         }
     }, [setFinalScore, setGameOver])
 
-    // useEffect(() => {
-    //   if(isAuthenticated && gameOver) {
-    //     if(finalScore > loggedUser.bestScore){
-    //       axios.put(`/user/${loggedUser._id}`, {
-    //         score: finalScore
-    //       }).then(res => console.log(res.data.message))
-    //     }
-    //   }
-    // }, [gameOver, isAuthenticated])
+    const updateUserScore = (score) => {
+      var message = ""
 
-    const updateUserScore = () => {
-      if(finalScore > loggedUser.bestScore) {
+      if(score > loggedUser.bestScore) {
         axios.put(`/user/${loggedUser._id}`, {
-          score: finalScore
-        }).then(res => {return res.data.message})
+          score: score
+        }).then(res => {
+          setLoggedUser({...loggedUser, bestScore: score})
+        })
+        message = "new record"
       } else {
-        return "record not beated"
+        message = "score not beated"
       }
+
+      return message
     }
 
     return (
         <div>
+          <div className="canvas-container">
             <canvas id="ctx"></canvas>
+          </div>
             <div>
                 {
                   gameOver ?
-                    isAuthenticated ? updateUserScore() : <Register />
+                    isAuthenticated ? updateUserScore(finalScore) : <Register />
                     : "Playing"
                 }
             </div>

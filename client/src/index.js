@@ -6,13 +6,11 @@ import { AuthProvider } from './context/AuthContext'
 import { GameProvider } from './context/GameContext'
 
 ReactDOM.render(
-  <React.StrictMode>
     <AuthProvider>
     <GameProvider>
       <App />
     </GameProvider>
-    </AuthProvider>
-  </React.StrictMode>,
+    </AuthProvider>,
   document.getElementById('root')
 );
 

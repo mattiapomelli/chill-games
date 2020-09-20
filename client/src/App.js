@@ -18,8 +18,16 @@ function App() {
 
   	return (
     	<div className="App">
-			<div>{isAuthenticated ? loggedUser.username : "Guest"}</div>
-			<button onClick={logOut}>Logout</button>
+			{isAuthenticated ?
+				<div>
+					<span>{loggedUser.username}</span>
+					<span>Your record is: {loggedUser.bestScore}</span>
+					<button onClick={logOut}>Logout</button>
+				</div>
+			: <div>
+				<span>Guest</span>
+				<button>Login</button>
+			</div>}
 			<Game />
     	</div>
   	);
