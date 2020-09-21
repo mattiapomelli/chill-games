@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-const Game = () => {
+const Landing = () => {
 
     return (
       <div>
@@ -11,4 +11,4 @@ const Game = () => {
     )
 }
 
-export default Game
+export default Landing

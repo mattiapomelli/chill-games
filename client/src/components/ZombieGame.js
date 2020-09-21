@@ -8,8 +8,8 @@ import Register from "./Register"
 import {Link} from "react-router-dom"
 
 const ZombieGame = () => {
-    const {endGame, gameOver, setGameOver} = useContext(GameContext)
-    const {isAuthenticated} = useContext(AuthContext)
+    const {endGame, gameOver, setGameOver, finalScore} = useContext(GameContext)
+    const {isAuthenticated, loggedUser} = useContext(AuthContext)
 
     useEffect(() => {
         setGameOver(false)
@@ -927,7 +927,7 @@ const ZombieGame = () => {
             </div>
 
             { gameOver ?
-                isAuthenticated? "score updated" :  <Register />
+                isAuthenticated ? (finalScore > loggedUser.bestScore && "New record!") :  <Register />
                 :
                 "playing"
             }

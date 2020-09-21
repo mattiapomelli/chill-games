@@ -1,5 +1,5 @@
 import React from 'react';
-import Game from "./components/Game"
+import Landing from "./components/Landing"
 import ZombieGame from './components/ZombieGame';
 import Navbar from "./components/Navbar"
 import Login from "./components/Login"
@@ -17,8 +17,8 @@ function App() {
     	<div className="App">
 		<Router>
 			<Navbar />
-			<PrivateRoute exact path="/" component={Game}/>
-			<Route path="/zombiegame" component={ZombieGame}/>
+			<PrivateRoute exact path="/" component={Landing}/>
+			<PrivateRoute path="/zombiegame" component={ZombieGame}/>
 			<Route path="/login" component={Login}/>
 			<Route path="/ranking" component={Ranking}/>
 		</Router>

@@ -78,13 +78,15 @@ userRouter.put('/:id', passport.authenticate('jwt', {session: false}), (req, res
     User.findByIdAndUpdate(req.params.id, {
         $max: {bestScore: req.body.score},
         $inc: {'stats.enemiesKilled': req.body.stats.enemiesKilled}
-    }, (err, user) => {
+    }, {new: true}, //to return the updated document and not the original one
+    (err, user) => {
         if(err)
             res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
         if(!user)
             return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
 
-        return res.status(200).json({message: {msgBody: "Stats updated", msgError: false}})
+        const {_id, username, bestScore} = user
+        return res.status(200).json({username, _id, bestScore})
     })
 })
 

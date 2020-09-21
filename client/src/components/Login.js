@@ -14,6 +14,7 @@ const Login = (props) => {
             if(isAuthenticated){
                 setLoggedUser(loggedUser)
                 setIsAuthenticated(isAuthenticated)
+                setIsGuest(false)
                 props.history.push('/')  
             }
         })

@@ -6,7 +6,7 @@ import { GameContext } from "../context/GameContext"
 const Register = () => {
     const [username, setUsername] = useState('')
     const {finalScore, stats} = useContext(GameContext)
-    const {setLoggedUser, setIsAuthenticated} = useContext(AuthContext)
+    const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const registerUser = (e) => {
         e.preventDefault()
@@ -16,6 +16,7 @@ const Register = () => {
             if(isAuthenticated){
                 setLoggedUser(loggedUser)
                 setIsAuthenticated(isAuthenticated)
+                setIsGuest(false)
             }
         })
     }
