@@ -954,22 +954,22 @@ const Game = () => {
     return (
         <div>
           <div className="canvas-container">
-            <canvas id="ctx" width="1400" height="600"></canvas>         
+            <canvas style={{display: 'none'}} id="ctx" width="1400" height="600"></canvas>         
           </div>
 
           {
               !gameLaunched ?
               <div>
               <h1>Zombie Game</h1>
-              <button onClick={() =>{setGameLaunched(true); launchGame()}}>Play</button>
+              <button onClick={() =>{setGameLaunched(true); document.getElementById('ctx').style.display = "block"; launchGame();}}>Play</button>
               <button>Comands</button>
               </div>
-              : (
-
-                  gameOver ?
+              :
+              <div>
+                  {gameOver ?
                     isAuthenticated ? <div className="message"></div> : <Register />
-                    : "Playing"
-              )
+                    : "Playing"}
+              </div>
               }
         </div>
     )
