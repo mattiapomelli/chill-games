@@ -8,15 +8,27 @@ import { AuthContext } from "../context/AuthContext"
 import axios from "axios"
 
 const Game = () => {
-    const {gameOver, setGameOver, setFinalScore, finalScore } = useContext(GameContext)
+    const {gameOver, setGameOver, setFinalScore, setStats} = useContext(GameContext)
     const {isAuthenticated, loggedUser, setLoggedUser} = useContext(AuthContext)
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+    var myRequest;
 
     useEffect(() => {
-        console.log('game started')
+      console.log('welcome')
+
+      return () => {
+        cancelAnimationFrame(myRequest)
+      }
+    },[myRequest, cancelAnimationFrame])
+
+    const startGame = () => {
+      
         //VARIABLES
-        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+        
+        console.log('game started')
+        var gameStats = {enemiesKilled: 0}
       
         let canvas, ctx;
         let buffer;
@@ -53,7 +65,6 @@ const Game = () => {
           canvas.width = screen_w;
         
           ctx.imageSmoothingEnabled = false;
-          //ctx.imageSmoothingQuality = 'high';
         }
       
         // timers
@@ -128,6 +139,7 @@ const Game = () => {
         //EVENT LISTENERS
         // key handlers
         function keyDownHandler(event){
+          console.log('keydown')
             if(player1.confused){
               keyCodeD = 65;
               keyCodeA = 68;
@@ -227,6 +239,7 @@ const Game = () => {
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);   
         canvas.addEventListener('mousemove', mouseMoveHandler, false)
+        //window.addEventListener('resize', scaleCanvas)
         
         
         //bullet shooting
@@ -271,10 +284,12 @@ const Game = () => {
             buffer.restore();
         }
 
-        var myRequest;
+        
       
         //LOOP------------------------------------------------------------------------------------------------------------------------------------
         function gameLoop() {
+          //requestId = undefined
+
           buffer.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
           buffer.font = '20px Arial';
           scaleCanvas();
@@ -741,7 +756,7 @@ const Game = () => {
           for(let key in enemyBulletList){
           var isColliding = testCollisionEntity2(player1, enemyBulletList[key])
           if (isColliding){
-                console.log('colliding' + isColliding);
+                //console.log('colliding' + isColliding);
                 player1.x += enemyBulletList[key].spdX;
                 enemyBulletList[key].timer++;
                 if(player1.y === 385)
@@ -798,7 +813,8 @@ const Game = () => {
                 right = true;
                 left = true;
               }
-      
+              
+              gameStats.enemiesKilled++
               delete enemyList[key];		}
           }
           for(let key in bulletList){
@@ -824,8 +840,9 @@ const Game = () => {
           buffer.fillText('TOWER LIFE',640,40);
       
           if(towerLife === 0){
-            setFinalScore(score)
-            setGameOver(true)
+            //setFinalScore(score)
+            //setStats(gameStats)
+            //setGameOver(true)
             player1.spdX = 0;
             player1.spdY = 0;
             continue_update = false;
@@ -837,19 +854,28 @@ const Game = () => {
             buffer.fillText('GAME OVER',640,180);
             buffer.font = '15px Arial';
             buffer.fillText('Press SpaceBar to play again', 600,210);
+            //cancelAnimationFrame(myRequest)
+
             
           }
           ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
+          
+          if(towerLife === 0){
+            cancelAnimationFrame(myRequest)
+            endGame(score, gameStats)
+            return
+          }
       
-      
-          myRequest = requestAnimationFrame(gameLoop);	
+
+          myRequest = requestAnimationFrame(gameLoop);
+          console.log('loop')
         }
-      
         myRequest = requestAnimationFrame(gameLoop);
       
         function startNewGame() {
             setGameOver(false)
             setFinalScore(0)
+            setStats({enemiesKilled: 0})
             player1.spdX = 7;
             player1.spdY = 15;
             player1.x = 555;
@@ -885,44 +911,46 @@ const Game = () => {
             
         }
 
-
-        return () => {
-          cancelAnimationFrame(myRequest)
-          document.removeEventListener('keydown', keyDownHandler);
-          document.removeEventListener('keyup', keyUpHandler);
-          canvas.removeEventListener('mousemove', mouseMoveHandler);
-          setFinalScore(0)
-          setGameOver(false)
-        }
-
-    }, [setFinalScore, setGameOver])
-
-    const updateUserScore = (score) => {
-      var message = ""
-
-      if(score > loggedUser.bestScore) {
-        axios.put(`/user/${loggedUser._id}`, {
-          score: score
-        }).then(res => {
-          setLoggedUser({...loggedUser, bestScore: score})
-        })
-        message = "new record"
-      } else {
-        message = "score not beated"
-      }
-
-      return message
     }
+
+
+
+    const endGame = (score, gameStats) => {
+      setFinalScore(score)
+      setStats(gameStats)
+      setGameOver(true)
+      if(isAuthenticated){
+        updateUserScore(score, gameStats)
+      }
+    }
+
+    const updateUserScore = (score, stats) => {
+
+      //if(score > loggedUser.bestScore) {
+      axios.put(`/user/${loggedUser._id}`, {
+        score: score,
+        stats: stats
+      }).then(res => {
+        setLoggedUser({...loggedUser, bestScore: score})
+      })
+
+      let message = document.querySelector('.message')
+      message.innerHTML = "Stats updated"
+
+    }
+
 
     return (
         <div>
           <div className="canvas-container">
-            <canvas id="ctx"></canvas>
+            <canvas id="ctx" width="1400" height="600"></canvas>
           </div>
+          <button onClick={startGame}>Play</button>
+          <button>Comands</button>
             <div>
                 {
                   gameOver ?
-                    isAuthenticated ? updateUserScore(finalScore) : <Register />
+                    isAuthenticated ? <div className="message"></div> : <Register />
                     : "Playing"
                 }
             </div>
