@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Player from "../game/classes/Player"
 import {testCollisionEntity, testCollisionEntity2 } from "../game/actions/collision"
 import {randomlyGenerateEnemy, randomlyGenerateUpgrade, generateEnemyBullet } from "../game/actions/actions"
@@ -10,24 +10,26 @@ import axios from "axios"
 const Game = () => {
     const {gameOver, setGameOver, setFinalScore, setStats} = useContext(GameContext)
     const {isAuthenticated, loggedUser, setLoggedUser} = useContext(AuthContext)
+    const [gameLaunched, setGameLaunched] = useState(false)
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                             window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
     var myRequest;
 
     useEffect(() => {
+      setGameOver(false)
       console.log('welcome')
 
       return () => {
         cancelAnimationFrame(myRequest)
       }
-    },[myRequest, cancelAnimationFrame])
+    },[myRequest, cancelAnimationFrame, setGameOver])
 
-    const startGame = () => {
+    const launchGame = () => {
       
         //VARIABLES
+        var gameEnded = false
         
-        console.log('game started')
         var gameStats = {enemiesKilled: 0}
       
         let canvas, ctx;
@@ -289,10 +291,17 @@ const Game = () => {
         //LOOP------------------------------------------------------------------------------------------------------------------------------------
         function gameLoop() {
           //requestId = undefined
+          scaleCanvas();
+
+          if(gameEnded){
+            console.log('end loop')
+            myRequest = requestAnimationFrame(gameLoop);
+            ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
+            return
+          }
 
           buffer.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
           buffer.font = '20px Arial';
-          scaleCanvas();
           if(towerLife > 0)
 		        frameCount++;
           buffer.fillText(frameCount,400,100);
@@ -861,9 +870,10 @@ const Game = () => {
           ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
           
           if(towerLife === 0){
-            cancelAnimationFrame(myRequest)
+            gameEnded = true
+            //cancelAnimationFrame(myRequest)
             endGame(score, gameStats)
-            return
+            //return
           }
       
 
@@ -874,8 +884,8 @@ const Game = () => {
       
         function startNewGame() {
             setGameOver(false)
-            setFinalScore(0)
-            setStats({enemiesKilled: 0})
+            //setFinalScore(0)
+            //setStats({enemiesKilled: 0})
             player1.spdX = 7;
             player1.spdY = 15;
             player1.x = 555;
@@ -908,7 +918,7 @@ const Game = () => {
             
             poison_active = false;
             poison_placed = false;
-            
+            gameEnded = false;         
         }
 
     }
@@ -931,7 +941,8 @@ const Game = () => {
         score: score,
         stats: stats
       }).then(res => {
-        setLoggedUser({...loggedUser, bestScore: score})
+        if(score > loggedUser.bestScore)
+          setLoggedUser({...loggedUser, bestScore: score})
       })
 
       let message = document.querySelector('.message')
@@ -943,17 +954,23 @@ const Game = () => {
     return (
         <div>
           <div className="canvas-container">
-            <canvas id="ctx" width="1400" height="600"></canvas>
+            <canvas id="ctx" width="1400" height="600"></canvas>         
           </div>
-          <button onClick={startGame}>Play</button>
-          <button>Comands</button>
-            <div>
-                {
+
+          {
+              !gameLaunched ?
+              <div>
+              <h1>Zombie Game</h1>
+              <button onClick={() =>{setGameLaunched(true); launchGame()}}>Play</button>
+              <button>Comands</button>
+              </div>
+              : (
+
                   gameOver ?
                     isAuthenticated ? <div className="message"></div> : <Register />
                     : "Playing"
-                }
-            </div>
+              )
+              }
         </div>
     )
 }
