@@ -11,7 +11,7 @@ mongoose
     .connect('mongodb+srv://mattiapomelli:25163540@zombie-game-v2.wqiz8.mongodb.net/maindb?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: false
+        useFindAndModify: false,
     })
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err))
