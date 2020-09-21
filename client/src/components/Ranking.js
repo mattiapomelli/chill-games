@@ -18,7 +18,7 @@ const Ranking = () => {
             {
                 users.map((user, index) => {
                     return(
-                        <li className={user._id === loggedUser._id ? "current-user-item": ""}>
+                        <li className={user._id === loggedUser._id ? "current-user-item": ""} key={index}>
                             {index + 1} - {user.username}: {user.bestScore}                     
                         </li>
                     )

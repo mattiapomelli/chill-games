@@ -10,6 +10,9 @@ const UserSchema = new mongoose.Schema({
     bestScore: {
         type: Number,
         default: 0
+    },
+    stats: {
+        enemiesKilled: {type: Number, default: 0}
     }
 })
 

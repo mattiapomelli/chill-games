@@ -13,14 +13,14 @@ const signToken = userID => {
 }
 
 userRouter.post('/register', (req, res) => {
-    const {username, bestScore} = req.body
+    const {username, bestScore, stats} = req.body
     User.findOne({username}, (err, user) => {
         if(err)
             res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
         if(user)
             res.status(400).json({message: {msgBody: "Username is already taken", msgError: true}})
         else {
-            const newUser = new User({username, bestScore})
+            const newUser = new User({username, bestScore, stats})
             newUser.save(err => {
                 if(err)
                     res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
@@ -73,16 +73,20 @@ userRouter.get('/', (req, res) => {
     .catch(err => res.status(400).json(err))
 })
 
-//update user's best score
+//update user's best score and stats
 userRouter.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-    User.findByIdAndUpdate(req.params.id, {bestScore: req.body.score}, (err, user) => {
+    User.findByIdAndUpdate(req.params.id, {
+        $max: {bestScore: req.body.score},
+        $inc: {'stats.enemiesKilled': req.body.stats.enemiesKilled}
+    }, (err, user) => {
         if(err)
             res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
         if(!user)
             return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
 
-        return res.status(200).json({message: {msgBody: "Best score updated", msgError: false}})
+        return res.status(200).json({message: {msgBody: "Stats updated", msgError: false}})
     })
 })
+
 
 module.exports = userRouter

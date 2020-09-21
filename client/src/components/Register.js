@@ -5,12 +5,12 @@ import { GameContext } from "../context/GameContext"
 
 const Register = () => {
     const [username, setUsername] = useState('')
-    const {finalScore} = useContext(GameContext)
+    const {finalScore, stats} = useContext(GameContext)
     const {setLoggedUser, setIsAuthenticated} = useContext(AuthContext)
 
     const registerUser = (e) => {
         e.preventDefault()
-        const user = {username, bestScore: finalScore}
+        const user = {username, bestScore: finalScore, stats}
         AuthService.register(user).then( data => {
             const {isAuthenticated, loggedUser} = data
             if(isAuthenticated){
