@@ -30,7 +30,7 @@ export const GameProvider = ({ children }) => {
 
     return ( 
         <div>
-            <GameContext.Provider value={{gameOver, setGameOver, finalScore, endGame, stats}}>
+            <GameContext.Provider value={{gameOver, setGameOver, finalScore, endGame, stats, setFinalScore}}>
                 { children }  {/*Here will go th App component*/}
             </GameContext.Provider>
         </div>
