@@ -2,9 +2,10 @@
     margin:0;
     padding:0;
 }
-html, body {
-    height:100%;
-    width:100%;
+
+html, body, #root, #root>div .App {
+    height: 100%;
+    width: 100%;
 }
 
 .canvas-container {
@@ -14,8 +15,4 @@ html, body {
 canvas {
     background: lightblue;
     margin: auto;
-}
-
-.current-user-item {
-    color: red;
 }

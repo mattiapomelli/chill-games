@@ -1,0 +1,143 @@
+.ranking-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    height: 92vh;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.table-container {
+    position: relative;
+    padding-top: 50px;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 400px;
+    height: 60vh;
+    margin-bottom: 10vh;
+    /* border: 1px solid black; */
+}
+
+table {
+    width: 100%;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+}
+
+/* Columns */
+tr td:first-child, tr th:first-child { /* First column */
+    width: 20%;
+    text-align: center;
+}
+tr td:nth-child(2), tr th:nth-child(2) { /* Second column */
+    padding-left: 1.7em;
+    width: 40%;
+}
+tr td:nth-child(3), tr th:nth-child(3) { /* Thirdd column */
+    width: 40%;
+    padding-left: 1.7em;
+}
+
+/* Cells */
+th {
+    color: white;
+    text-align: left;
+    font-size: 1.2em;
+    user-select: none;
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+    height: 50px;
+    box-sizing: border-box;
+}
+
+td {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-size: 1.2em;
+    box-sizing: border-box;
+}
+tr {
+    border-bottom: 1px solid black;
+}
+
+
+/* Fixed headers */
+.table-head {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    background-color: #222;
+}
+
+.table-body {
+    display: block;
+    height: 100%;
+    overflow-y: overlay;  /* other option could be auto */
+    overflow-x: hidden;
+    background-color: #eee;
+    scroll-behavior: smooth;
+}
+
+
+/* Scrollbar */
+::-webkit-scrollbar {   /* width */
+    width: 10px;
+}
+::-webkit-scrollbar-track {  /* Track */
+    background: rgb(206, 206, 206)
+}
+::-webkit-scrollbar-thumb { /* Handle */
+    background: #888;
+}
+::-webkit-scrollbar-thumb:hover { /* Handle on hover */
+    background: #555;
+}
+
+.current-user-row {
+    background-color: rgba(205, 92, 92, 0.637);
+}
+.current-user-row td:nth-child(2) {
+    font-weight: 800;
+}
+
+.first {
+    background-color: rgba(255, 217, 0, 0.6);
+}
+.second {
+    background-color: rgba(192, 192, 192, 0.6);
+}
+.third {
+    background-color: rgba(199, 90, 0, 0.6);
+}
+.first td:first-child, .second td:first-child , .third td:first-child  {
+    font-weight: 900;
+    font-size: 1.3em;
+}
+
+
+/* Scroll buttons */
+
+.scroll-buttons-container {
+    position: absolute;
+    bottom: 0.5em;
+    right: 1em; 
+    display: flex;
+    flex-direction: column;
+}
+
+.scroll-button {
+    width: 2em;
+    height: 2em;
+    margin-top: 0.4em;
+    cursor: pointer;
+}
+.scroll-to-top circle {
+    fill: rgb(54, 54, 54)
+}
+.scroll-to-user circle {
+    fill: rgb(37, 37, 37);
+}

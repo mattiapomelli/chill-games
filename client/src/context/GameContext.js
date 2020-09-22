@@ -29,10 +29,8 @@ export const GameProvider = ({ children }) => {
     }, [isAuthenticated, loggedUser._id, setLoggedUser])
 
     return ( 
-        <div>
-            <GameContext.Provider value={{gameOver, setGameOver, finalScore, endGame, stats, setFinalScore}}>
-                { children }  {/*Here will go th App component*/}
-            </GameContext.Provider>
-        </div>
+        <GameContext.Provider value={{gameOver, setGameOver, finalScore, endGame, stats, setFinalScore}}>
+            { children }  {/*Here will go th App component*/}
+        </GameContext.Provider>
     )
 }
