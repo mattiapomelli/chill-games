@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react"
 import AuthService from '../services/AuthService'
 import { AuthContext } from "../context/AuthContext"
 import { GameContext } from "../context/GameContext"
+import {Link} from "react-router-dom"
 
 const Register = () => {
     const [username, setUsername] = useState('')
@@ -26,11 +27,25 @@ const Register = () => {
     }
 
     return (
-        <div>
-            <form onSubmit={registerUser}>
-                <input placeholder="Username" value={username} onChange={onChange}/>
-                <button type="submit">Submit</button>
-            </form>
+        <div className="login-container">
+            <div className="login-card">
+                <form className="login-form" onSubmit={registerUser}>
+                    <h1>Register</h1>
+
+                    <div className="input-container">
+                        <span className="material-icons input-icon">person_outline</span>
+                        <input placeholder="Username" value={username} onChange={onChange}/>
+                    </div>
+
+
+                    <button type="submit">Sign up</button>
+
+                    <p className="redirect-text">Don't have an account? <Link to="/login">Sign in</Link></p>
+                </form>
+
+            </div>
+
+            <p className="guest-text"> Continue as a guest </p>
         </div>
     )
 }
