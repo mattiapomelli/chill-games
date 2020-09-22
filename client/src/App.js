@@ -1,6 +1,7 @@
 import React from 'react';
 import Landing from "./components/Landing"
 import ZombieGame from './components/ZombieGame';
+import CarGame from './components/CarGame';
 import Navbar from "./components/Navbar"
 import Login from "./components/Login"
 import Register from './components/Register';
@@ -23,9 +24,10 @@ function App() {
 				location.pathname !== '/login' && location.pathname !== '/register' && <Navbar />
 			}
 			<PrivateRoute exact path="/" component={Landing}/>
-			<PrivateRoute path="/zombiegame" component={ZombieGame}/>
 			<UnPrivateRoute path="/login" component={Login}/>
 			<UnPrivateRoute path="/register" component={Register}/>
+			<PrivateRoute path="/zombiegame" component={ZombieGame}/>
+			<PrivateRoute path="/cargame" component={CarGame}/>
 			<Route path="/ranking" component={Ranking}/>
 			<PrivateRoute path="/user/:id" component={Profile}/>
     	</div>
