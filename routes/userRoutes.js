@@ -90,5 +90,16 @@ userRouter.put('/:id', passport.authenticate('jwt', {session: false}), (req, res
     })
 })
 
+userRouter.get('/:id', (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        if(err)
+            res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
+        if(!user)    //that means the username already exists
+            return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
+
+        return res.status(200).json(user)
+    })
+})
+
 
 module.exports = userRouter

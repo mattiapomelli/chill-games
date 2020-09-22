@@ -23,7 +23,7 @@ const Navbar = () => {
         <div>
             {isAuthenticated ?
 				<div>
-					<span>{loggedUser.username}</span>
+					<span><Link to={`/user/${loggedUser._id}`}>{loggedUser.username}</Link></span>
 					<span>Your record is: {loggedUser.bestScore}</span>
 					<button onClick={logOut}>Logout</button>
 				</div>
