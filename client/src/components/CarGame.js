@@ -1,12 +1,28 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useContext } from "react"
 import { testCollisionBetweenEntities } from "../games/cargame/actions/collision"
 import {randomlyGenerateObstacle, randomlyGenerateStripe, randomlyGenerateBush, randomlyGenerateOil, randomlyGenerateGas} from "../games/cargame/actions/actions"
 import Car from "../games/cargame/classes/Car"
 import PoliceCar from "../games/cargame/classes/PoliceCar"
+import { GameContext } from "../context/GameContext"
+import { AuthContext } from "../context/AuthContext"
+import {Link } from "react-router-dom"
+import Register from "../components/Register"
 
 const CarGame = () => {
+    const { gameOver, setGameOver} = useContext(GameContext)
+    const {isAuthenticated} = useContext(AuthContext)
 
     useEffect(() => {
+
+        setGameOver(false)
+        console.log('game started')
+        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+        var myRequest;
+
+        var gameEnded = false
+
         var canvas = document.getElementById("carCanvas");
         var context = canvas.getContext("2d");
         context.font = '20px Arial';
@@ -128,6 +144,12 @@ const CarGame = () => {
         }
 
         function gameLoop(){
+            if(gameEnded){
+                console.log('end loop')
+                myRequest = requestAnimationFrame(gameLoop);
+                return
+            }
+
             context.clearRect(0,0,canvas.width,canvas.height);
             frameCount++;
 
@@ -262,6 +284,8 @@ const CarGame = () => {
             
             //GAME OVER
             if(gameover){
+                    gameEnded = true
+                    gameFinished(score)
                     //obstacleList[key].spdY = 0;
                     car.speed = 0;
                     continue_update = false;
@@ -282,12 +306,14 @@ const CarGame = () => {
                     }
                 }
 
-            requestAnimationFrame(gameLoop);
+            myRequest = requestAnimationFrame(gameLoop);
+            console.log('loop')
         }
 
-        requestAnimationFrame(gameLoop);
+        myRequest = requestAnimationFrame(gameLoop);
 
         function startNewGame (){
+            setGameOver(false)
             obstacleList = {};
             stripeList = {};
             bushList = {};
@@ -308,13 +334,31 @@ const CarGame = () => {
             policecar.onposition = false;
             car.y = 470;
             gameover = false;
+            gameEnded = false
         }
 
+        return () => {
+            cancelAnimationFrame(myRequest)
+        }
 
-    })
+    }, [setGameOver])
+
+    const gameFinished = (score) => {
+        console.log(score)
+    }
 
     return (
+        <div>
         <canvas id="carCanvas" width="900" height="700"></canvas>
+
+            { gameOver ?
+                isAuthenticated ?  "New record!" :  <Register />
+                :
+                "playing"
+            }
+
+            <Link to="/">Quit game</Link>
+        </div>
     )
 }
 

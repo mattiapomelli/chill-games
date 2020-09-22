@@ -914,7 +914,7 @@ const ZombieGame = () => {
 
         return () => {
             cancelAnimationFrame(myRequest)
-          }
+        }
 
     }, [endGame, setGameOver])
 
