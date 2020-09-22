@@ -22,7 +22,7 @@ const ZombieGame = () => {
         //VARIABLES
         var gameEnded = false
         
-        var gameStats = {enemiesKilled: 0}
+        var gameStats = {enemiesKilled: 0, zombiesKilled: 0, wolvesKilled: 0}
       
         let canvas, ctx;
         let buffer;
@@ -863,7 +863,7 @@ const ZombieGame = () => {
           if(towerLife === 0){
             gameEnded = true
             //cancelAnimationFrame(myRequest)
-            endGame(score, gameStats)
+            endGame(score, gameStats, 'zombiegame')
             //return
           }
       

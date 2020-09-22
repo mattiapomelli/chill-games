@@ -9,7 +9,7 @@ import {Link } from "react-router-dom"
 import Register from "../components/Register"
 
 const CarGame = () => {
-    const { gameOver, setGameOver} = useContext(GameContext)
+    const { gameOver, setGameOver, endGame} = useContext(GameContext)
     const {isAuthenticated} = useContext(AuthContext)
 
     useEffect(() => {
@@ -22,6 +22,8 @@ const CarGame = () => {
         var myRequest;
 
         var gameEnded = false
+
+        var gameStats = {obstaclesHit: 0, gasCollected: 0}
 
         var canvas = document.getElementById("carCanvas");
         var context = canvas.getContext("2d");
@@ -285,7 +287,7 @@ const CarGame = () => {
             //GAME OVER
             if(gameover){
                     gameEnded = true
-                    gameFinished(score)
+                    endGame(score, gameStats, "cargame")
                     //obstacleList[key].spdY = 0;
                     car.speed = 0;
                     continue_update = false;
@@ -341,11 +343,7 @@ const CarGame = () => {
             cancelAnimationFrame(myRequest)
         }
 
-    }, [setGameOver])
-
-    const gameFinished = (score) => {
-        console.log(score)
-    }
+    }, [endGame, setGameOver])
 
     return (
         <div>
