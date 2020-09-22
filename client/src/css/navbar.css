@@ -1,0 +1,56 @@
+.header-container {
+    background-color: teal;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    margin: auto;
+    padding: 0.4em 0;
+}
+
+
+.menu-item {
+    color: white;
+    text-decoration: none;
+    padding: 1em;
+}
+.menu-item:hover {
+    background-color: violet;
+}
+
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+.user-info img {
+    width: 2em;
+    border-radius: 100%;
+}
+.user-name {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 800;
+    margin-left: 0.6em;
+}
+
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+.navbar-login-btn {
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    padding: 1em;
+    margin-left: 1em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
