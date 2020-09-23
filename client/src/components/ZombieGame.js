@@ -133,6 +133,7 @@ const ZombieGame = () => {
         //EVENT LISTENERS
         // key handlers
         function keyDownHandler(event){
+          console.log('keydown')
             if(player1.confused){
               keyCodeD = 65;
               keyCodeA = 68;
@@ -914,6 +915,9 @@ const ZombieGame = () => {
 
         return () => {
             cancelAnimationFrame(myRequest)
+            document.removeEventListener('keydown', keyDownHandler);
+            document.removeEventListener('keyup', keyUpHandler);   
+            canvas.removeEventListener('mousemove', mouseMoveHandler)
         }
 
     }, [endGame, setGameOver])

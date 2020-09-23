@@ -306,7 +306,9 @@ const CarGame = () => {
 
                     buffer.fillText('GAME OVER',390,310);
                     buffer.fillText('SCORE: ' + score,400,330);
-                    buffer.fillText('PRESS SPACEBAR TO PLAY AGAIN',340,350);
+                    buffer.font = '17px Arial';
+                    buffer.fillText('Press spacebar to play again',340,350);
+                    buffer.font = '20px Arial';
                 }
 
             context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
@@ -349,6 +351,8 @@ const CarGame = () => {
 
         return () => {
             cancelAnimationFrame(myRequest)
+            document.removeEventListener('keydown', keyDownHandler);
+            document.removeEventListener('keyup', keyUpHandler);
         }
 
     }, [endGame, setGameOver])
