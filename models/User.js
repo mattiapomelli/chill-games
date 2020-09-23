@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
             obstaclesHit: {type: Number, default: 0},
             gasCollected: {type: Number, default: 0},
         }
+    },
+    created: {
+        type: Date,
+        default: Date.now
     }
 })
 

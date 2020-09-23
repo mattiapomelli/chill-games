@@ -3,16 +3,20 @@ import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
 import AuthService from "../services/AuthService"
 import axios from "axios"
+import "../css/profile.css"
 
 const Profile = (props) => {
-    const {setIsAuthenticated, setLoggedUser } = useContext(AuthContext)
+    const {setIsAuthenticated, setLoggedUser, loggedUser } = useContext(AuthContext)
     const {setFinalScore} = useContext(GameContext)
     const [user, setUser] = useState({})
+    const [loaded, setLoaded] = useState(false)
+    const [currentGame, setCurrentGame] = useState('zombiegame')    //game the statistics are related to
 
     useEffect(() => {
         axios.get("/user/" + props.match.params.id)
         .then(res => {
             setUser(res.data)
+            setLoaded(true)
         }).catch(err => console.log(err))
     }, [props.match.params.id]) //so when we go from an user profile to another user's profile since props change the component re-fetches data and re-mounts
 
@@ -24,12 +28,48 @@ const Profile = (props) => {
 				setIsAuthenticated(false)
 			}
 		})
-	}
+    }
+    
+    const onTabClick = (event) => {
+        setCurrentGame(event.target.name)
+
+        event.target.classList.add('active2')
+        let tabs = document.getElementsByClassName('game-tab')
+        for (let tab of tabs) {
+            tab !== event.target && tab.classList.remove('active2')
+        }
+    }
 
     return (
-        <div>
-            <h1>{user.username}</h1>
-            <button onClick={logOut}>Logout</button>
+        <div className="profile-container">
+            { loaded ?
+            <div className="profile-card">
+                <div className="profile-header">
+                    <div className="profile-avatar">
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile"/>
+                        <h1>{user.username}</h1>
+                    </div>
+                    <div className="joined-date">
+                        <div>Joined on</div>
+                        <h4>{user.created.substring(0, 10)}</h4>
+                    </div>           
+                </div>
+
+                <div className="profile-body">
+                    <div className="tabs-container">
+                        <button onClick={onTabClick} className="game-tab tab active2" name="zombiegame">Zombie Game</button>
+                        <button onClick={onTabClick} className="game-tab tab" name="cargame">Car Game</button>
+                    </div>
+                    <div className="profile-statistics">
+                        <h2>Best Score: {user[currentGame].bestScore}</h2>
+                    </div>
+                </div>
+                
+                { user._id === loggedUser._id && <button className="logout-button" onClick={logOut}>Logout</button>}
+                
+            </div>
+            
+            : "Loading" }
         </div>
     )
 }

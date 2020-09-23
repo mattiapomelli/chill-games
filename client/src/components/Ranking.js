@@ -43,6 +43,7 @@ const Ranking = () => {
     }
 
     const styleActiveTab = (event) => {
+        scrollTableToTop()
         event.target.classList.add('active')
         let tabs = document.getElementsByClassName('rank-tab')
         for (let tab of tabs) {
@@ -53,8 +54,8 @@ const Ranking = () => {
     return(
         <div className="ranking-container">
             <div className="ranking-buttons">
-                <button className="rank-tab active" onClick={(event) => {setCurrentGame('zombiegame'); styleActiveTab(event)}}>Zombie Game</button>
-                <button className="rank-tab" onClick={(event) => {setCurrentGame('cargame'); styleActiveTab(event)}}>Car Game</button>
+                <button className="rank-tab tab active" onClick={(event) => {setCurrentGame('zombiegame'); styleActiveTab(event)}}>Zombie Game</button>
+                <button className="rank-tab tab" onClick={(event) => {setCurrentGame('cargame'); styleActiveTab(event)}}>Car Game</button>
             </div>
             <div className="table-container">
 
