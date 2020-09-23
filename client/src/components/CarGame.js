@@ -32,17 +32,13 @@ const CarGame = () => {
         //Images
         var startline = new Image();
         startline.src = "images/cargame/startline.png";
-        var bush = new Image();
-        bush.src = "images/cargame/bush.png";
-        var gas = new Image();
-        gas.src = "images/cargame/gas.png";
         var oil = new Image();
         oil.src = "images/cargame/oil.png";
         var background = new Image();
         background.src = "images/cargame/background.png";
 
-        var car = new Car()
-        var policecar = new PoliceCar()
+        var car = new Car(450 - 94/2, 470, 94, 160, "images/cargame/car.png")
+        var policecar = new PoliceCar(600, -200, 94, 160, "images/cargame/policecar.png")
 
 
         var obstacleList = {};
@@ -84,46 +80,15 @@ const CarGame = () => {
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);
 
-        function drawEntity(entity) {
-            context.drawImage(entity.img, entity.x, entity.y, entity.width, entity.height);
+        function updateEntity(entity) {
+            entity.draw(context)
+            if(continue_update)
+                entity.move()
         }
 
         function updateCar(){
-            drawEntity(car)
+            car.draw(context)
             car.move()	
-        }
-
-        function updateObstacle(entity){
-            drawEntity(entity);
-            if(continue_update)
-                entity.move()
-        }
-
-        function drawStripe(entity){
-            context.fillStyle = 'white';
-            context.fillRect(442,entity.y,16,100)
-        }
-
-        function updateStripe(entity){
-            drawStripe(entity);
-            if(continue_update)
-                entity.move()
-        }
-
-        function moveEntity (entity) {
-            entity.y += entity.spdY
-        }
-
-        function updateBush(entity){
-            drawEntity(entity);
-            if(continue_update)
-                moveEntity(entity);
-        }
-
-        function updateGas(entity){
-            drawEntity(entity);
-            if(continue_update)
-                moveEntity(entity);
         }
 
         function drawGasLevel(){
@@ -140,7 +105,7 @@ const CarGame = () => {
         }
 
         function updatePoliceCar(){
-            drawEntity(policecar);
+            policecar.draw(context)
             if(policecar.onposition)
                 policecar.move(car)
         }
@@ -163,7 +128,7 @@ const CarGame = () => {
                 randomlyGenerateBush(bushList, Math.random()*100 + 730,-200);
             }
             for(let key in bushList){
-                updateBush(bushList[key]);
+                updateEntity(bushList[key]);
             }
 
             //SCORE
@@ -191,7 +156,7 @@ const CarGame = () => {
                 randomlyGenerateStripe(stripeList);
             }
             for(let key in stripeList){
-                updateStripe(stripeList[key]);
+                updateEntity(stripeList[key]);
             }
 
             //OIL
@@ -219,7 +184,7 @@ const CarGame = () => {
             }
 
             for(let key in gasList){
-                updateGas(gasList[key]);
+                updateEntity(gasList[key]);
                 let isColliding = testCollisionBetweenEntities(gasList[key], car);
                 if(isColliding){
                     delete gasList[key];
@@ -252,7 +217,7 @@ const CarGame = () => {
             }
 
             for(let key in obstacleList){
-                    updateObstacle(obstacleList[key]);
+                updateEntity(obstacleList[key]);
                 let isColliding = testCollisionBetweenEntities(obstacleList[key], car);
                 if(isColliding){
                     gameover = true;

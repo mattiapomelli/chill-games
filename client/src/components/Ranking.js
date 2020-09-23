@@ -65,7 +65,7 @@ const Ranking = () => {
                                         <tr key={index} className={`${user._id === loggedUser._id ? "current-user-row " : ""}${getClass(index)}`}>
                                             <td>{index + 1}</td>
                                             <td>{user.username}</td>
-                                            <td>{user.bestScore}</td>
+                                            <td>{user.zombiegame.bestScore}</td>
                                         </tr>
                                     )
                                 })

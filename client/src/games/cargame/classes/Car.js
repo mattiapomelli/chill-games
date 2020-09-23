@@ -1,14 +1,14 @@
-export default class Car {
-    constructor() {
-        this.width = 94;
-        this.height = 160;
-        this.x = 450 - this.width/2;
-        this.y = 470;
-        this.speed = 8;
+import Entity from "./Entity"
+
+export default class Car extends Entity{
+
+    constructor(x, y, width, height, img) {
+        super(x, y,  width, height, img)
+
+
+        this.speed = 16;
         this.leftPressed = false;
         this.rightPressed = false;
-        this.img = new Image();
-        this.img.src = "images/cargame/car.png";
     }
 
     move(){

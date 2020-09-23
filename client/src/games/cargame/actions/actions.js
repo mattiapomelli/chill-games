@@ -12,7 +12,7 @@ function randomlyGenerateObstacle(list){
     var width = 243;
     var height = 50;
 
-    list[id] = new Obstacle(id,ox,oy,spdY,width,height);
+    list[id] = new Obstacle(ox, oy, width, height, "images/cargame/obstacle.png", id, spdY);
 }
 
 function randomlyGenerateStripe(list){
@@ -20,7 +20,7 @@ function randomlyGenerateStripe(list){
     var id = Math.random();
     var spdY = 5;
 
-    list[id] = new Stripe(id,stripe_y,spdY);
+    list[id] = new Stripe(442, stripe_y, 16, 100, id, spdY);
 }
 
 function randomlyGenerateBush(list, x, y){
@@ -29,7 +29,7 @@ function randomlyGenerateBush(list, x, y){
     var id = Math.random();
     var spdY = 5;
 
-    list[id] = new Bush(id,bush_x,bush_y,spdY);
+    list[id] = new Bush(bush_x,bush_y, 80, 60, "images/cargame/bush.png", id, spdY);
 }
 
 function randomlyGenerateOil(list){
@@ -40,7 +40,7 @@ function randomlyGenerateOil(list){
     var width = 75;
     var height = 50;
 
-    list[id] = new Oil(id,oil_x,oil_y,spdY,width,height);
+    list[id] = new Oil(oil_x, oil_y, width, height, "images/cargame/oil.png", id, spdY);
 }
 
 function randomlyGenerateGas(list){
@@ -49,7 +49,7 @@ function randomlyGenerateGas(list){
     var id = Math.random();
     var spdY = 5;
 
-    list[id] = new Gas(id,gas_x,gas_y,spdY);
+    list[id] = new Gas(gas_x, gas_y, 50, 60, "images/cargame/gas.png", id, spdY);
 }
 
 export {randomlyGenerateObstacle, randomlyGenerateStripe, randomlyGenerateBush, randomlyGenerateOil, randomlyGenerateGas}
