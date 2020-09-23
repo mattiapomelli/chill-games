@@ -6,12 +6,12 @@ import {Link} from "react-router-dom"
 
 const Register = () => {
     const [username, setUsername] = useState('')
-    const {finalScore, stats} = useContext(GameContext)
+    const {finalScore, stats, activeGame} = useContext(GameContext)
     const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const registerUser = (e) => {
         e.preventDefault()
-        const user = {username, bestScore: finalScore, stats}
+        const user = {username, bestScore: finalScore, stats, game: activeGame}
         AuthService.register(user).then( data => {
             const {isAuthenticated, loggedUser} = data
             if(isAuthenticated){

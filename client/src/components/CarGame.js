@@ -100,6 +100,10 @@ const CarGame = () => {
             else if(event.keyCode === 39){
                 car.rightPressed = true;
             }
+
+            if(event.keyCode === 32 && gameover){
+                startNewGame();
+            }
         }
 
         function keyUpHandler(event){
@@ -302,11 +306,7 @@ const CarGame = () => {
 
                     buffer.fillText('GAME OVER',390,310);
                     buffer.fillText('SCORE: ' + score,400,330);
-                    buffer.fillText('CLICK TO PLAY AGAIN',340,350);
-
-                    document.onclick = function(mouse){
-                        startNewGame();
-                    }
+                    buffer.fillText('PRESS SPACEBAR TO PLAY AGAIN',340,350);
                 }
 
             context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);

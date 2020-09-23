@@ -8,12 +8,14 @@ export const GameProvider = ({ children }) => {
     const [gameOver, setGameOver] = useState(false)
     const [finalScore, setFinalScore] = useState(0)
     const [stats, setStats] = useState({})
+    const [activeGame, setActiveGame] = useState('')
     const {isAuthenticated, loggedUser, setLoggedUser} = useContext(AuthContext)
 
     const endGame = useCallback((score, gameStats, game) => {
         setGameOver(true)
         setFinalScore(score)
         setStats(gameStats)
+        setActiveGame(game)
         if(isAuthenticated){
             axios.put(`/user/${loggedUser._id}`, {
                 game: game,
@@ -28,7 +30,7 @@ export const GameProvider = ({ children }) => {
     }, [isAuthenticated, loggedUser._id, setLoggedUser])
 
     return ( 
-        <GameContext.Provider value={{gameOver, setGameOver, finalScore, endGame, stats, setFinalScore}}>
+        <GameContext.Provider value={{gameOver, setGameOver, finalScore, endGame, stats, setFinalScore, activeGame}}>
             { children }  {/*Here will go th App component*/}
         </GameContext.Provider>
     )

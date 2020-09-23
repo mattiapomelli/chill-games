@@ -13,14 +13,19 @@ const signToken = userID => {
 }
 
 userRouter.post('/register', (req, res) => {
-    const {username, bestScore, stats} = req.body
+    const {username, bestScore, stats, game} = req.body
     User.findOne({username}, (err, user) => {
         if(err)
             res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
         if(user)
             res.status(400).json({message: {msgBody: "Username is already taken", msgError: true}})
         else {
-            const newUser = new User({username, bestScore, stats})
+
+            let schema = {}
+            schema[game] = {bestScore, stats}
+            schema["username"] = username
+
+            const newUser = new User(schema)
             newUser.save(err => {
                 if(err)
                     res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
