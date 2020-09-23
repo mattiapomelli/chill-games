@@ -16,11 +16,10 @@ function randomlyGenerateObstacle(list){
 }
 
 function randomlyGenerateStripe(list){
-    var stripe_y = -250;
     var id = Math.random();
     var spdY = 5;
 
-    list[id] = new Stripe(442, stripe_y, 16, 100, id, spdY);
+    list[id] = new Stripe(id, spdY);
 }
 
 function randomlyGenerateBush(list, x, y){

@@ -1,10 +1,11 @@
-import Entity from "../classes/Entity"
+export default class Stripe {
 
-export default class Stripe extends Entity{
+    constructor (id, spdY) {
 
-    constructor (x, y, width, height, id, spdY) {
-        super(x, y,  width, height)
-
+        this.x = 442;
+        this.y = -250;
+        this.width = 16;
+        this.height = 100;
         this.spdY = spdY
         this.id = id
     }
@@ -12,5 +13,9 @@ export default class Stripe extends Entity{
     draw(context) {
         context.fillStyle = 'white';
         context.fillRect(this.x, this.y, this.width, this.height)
+    }
+
+    move() {
+        this.y += this.spdY
     }
 }
