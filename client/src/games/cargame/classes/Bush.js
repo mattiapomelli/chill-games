@@ -1,14 +1,12 @@
-export default class Bush {
+import Entity from "./Entity"
 
-    constructor (id,x, y, spdY){
+export default class Bush extends Entity{
+
+    constructor (x, y, width, height, img, id, spdY){
+
+        super(x, y,  width, height, img)
+
         this.spdY = spdY
-        this.x = x
-        this.y = y
         this.id = id
-        this.width = 80
-        this.height = 60
-        this.img = new Image();
-        this.img.src = "images/cargame/bush.png";
     }
-
 }

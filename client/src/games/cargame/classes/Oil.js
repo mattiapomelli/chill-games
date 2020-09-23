@@ -1,13 +1,12 @@
-export default class Oil {
+import Entity from "./Entity"
 
-    constructor (id,x, y, spdY,width,height) {
-        this.spdY = spdY
-        this.x = x
-        this.y = y
-        this.id = id
-        this.width = width
-        this.height = height
-        this.img = new Image();
-        this.img.src = "images/cargame/oil.png";
+export default class Oil extends Entity{
+
+    constructor(x, y,  width, height, img, id, spdY) {
+        super(x, y,  width, height, img)
+
+
+        this.spdY = spdY;
+        this.id = id;
     }
 }

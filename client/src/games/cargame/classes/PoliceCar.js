@@ -1,13 +1,12 @@
-export default class PoliceCar {
-    constructor() {
-        this.width = 94;
-        this.height = 160;
-        this.x = 600;
-        this.y = -200;
+import Entity from "./Entity"
+
+export default class PoliceCar extends Entity{
+
+    constructor (x, y, width, height, img) {
+
+        super(x, y,  width, height, img)
         this.spdX = 5;
         this.onposition = false;
-        this.img = new Image();
-        this.img.src = "images/cargame/policecar.png";
         this.continue_update = true
     }
 

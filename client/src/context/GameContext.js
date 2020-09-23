@@ -10,14 +10,13 @@ export const GameProvider = ({ children }) => {
     const [stats, setStats] = useState({})
     const {isAuthenticated, loggedUser, setLoggedUser} = useContext(AuthContext)
 
-    const endGame = useCallback((score, gameStats) => {
-        console.log("STATS:", score, gameStats)
+    const endGame = useCallback((score, gameStats, game) => {
         setGameOver(true)
         setFinalScore(score)
         setStats(gameStats)
         if(isAuthenticated){
-            console.log('update score');
             axios.put(`/user/${loggedUser._id}`, {
+                game: game,
                 score: score,
                 stats: gameStats
             }).then(res => setLoggedUser(res.data)) //to keep only if I want to update user record on screen

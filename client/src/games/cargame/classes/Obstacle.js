@@ -1,17 +1,13 @@
-export default class Obstacle {
+import Entity from "./Entity"
 
-    constructor(id, x, y, spdY,width,height) {
-        this.x = x;
+export default class Obstacle extends Entity {
+
+    constructor(x, y,  width, height, img, id, spdY) {
+        super(x, y,  width, height, img)
+
+
         this.spdY = spdY;
-        this.y = y;
         this.id = id;
-        this.width = width;
-        this.height = height;
-        this.img = new Image();
-        this.img.src = "images/cargame/obstacle.png";
     }
 
-    move () {
-        this.y += this.spdY;
-    }
 }
