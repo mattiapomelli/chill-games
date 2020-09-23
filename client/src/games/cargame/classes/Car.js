@@ -6,7 +6,7 @@ export default class Car extends Entity{
         super(x, y,  width, height, img)
 
 
-        this.speed = 16;
+        this.speed = 8;
         this.leftPressed = false;
         this.rightPressed = false;
     }
