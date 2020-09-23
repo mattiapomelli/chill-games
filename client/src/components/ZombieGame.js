@@ -113,19 +113,19 @@ const ZombieGame = () => {
       
         //IMAGES
         let tileset = new Image();
-        tileset.src = 'images/zombiegame/tileset8.png';
+        tileset.src = '/images/zombiegame/tileset8.png';
         let tower = new Image();
-        tower.src = 'images/zombiegame/cannontower.png';
+        tower.src = '/images/zombiegame/cannontower.png';
         let bullet_rect = new Image();
-        bullet_rect.src = 'images/zombiegame/rectbullet.png';
+        bullet_rect.src = '/images/zombiegame/rectbullet.png';
         let poison = new Image();
-        poison.src = 'images/zombiegame/poison.png';
+        poison.src = '/images/zombiegame/poison.png';
         let poison2 = new Image();
-        poison2.src = 'images/zombiegame/poison2.png';
+        poison2.src = '/images/zombiegame/poison2.png';
         let background = new Image();
-        background.src = 'images/zombiegame/background2.png';
+        background.src = '/images/zombiegame/background2.png';
         let enemybullet = new Image();
-        enemybullet.src = 'images/zombiegame/enemybullet.png';
+        enemybullet.src = '/images/zombiegame/enemybullet.png';
 
         //PLAYER
         var player1 = new Player(555,385,[{x:0,y:0,w:65,h:65},{x:0,y:65,w:65,h:65}],     [{x:130,y:0,w:70,h:19},{x:200,y:0,w:70,h:19}]);

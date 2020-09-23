@@ -65,14 +65,14 @@ const CarGame = () => {
 
         //Images
         var startline = new Image();
-        startline.src = "images/cargame/startline.png";
+        startline.src = "/images/cargame/startline.png";
         var oil = new Image();
-        oil.src = "images/cargame/oil.png";
+        oil.src = "/images/cargame/oil.png";
         var background = new Image();
-        background.src = "images/cargame/background.png";
+        background.src = "/images/cargame/background.png";
 
-        var car = new Car(450 - 94/2, 470, 94, 160, "images/cargame/car.png")
-        var policecar = new PoliceCar(600, -200, 94, 160, "images/cargame/policecar.png")
+        var car = new Car(450 - 94/2, 470, 94, 160, "/images/cargame/car.png")
+        var policecar = new PoliceCar(600, -200, 94, 160, "/images/cargame/policecar.png")
 
 
         var obstacleList = {};

@@ -26,8 +26,8 @@ function App() {
 			<PrivateRoute exact path="/" component={Landing}/>
 			<UnPrivateRoute path="/login" component={Login}/>
 			<UnPrivateRoute path="/register" component={Register}/>
-			<PrivateRoute path="/zombiegame" component={ZombieGame}/>
-			<PrivateRoute path="/cargame" component={CarGame}/>
+			<PrivateRoute path="/game/zombiegame" component={ZombieGame}/>
+			<PrivateRoute path="/game/cargame" component={CarGame}/>
 			<Route path="/ranking" component={Ranking}/>
 			<PrivateRoute path="/user/:id" component={Profile}/>
     	</div>
