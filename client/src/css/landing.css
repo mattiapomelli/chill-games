@@ -1,0 +1,49 @@
+.landing-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    min-height: 92vh;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.games-container {
+    display: flex;
+}
+
+.poster-container {
+    text-align: center;
+    margin: 1em;
+}
+.poster-container img {
+    width: 300px;
+}
+.poster-container h1 {
+    margin: 0.2em 0;
+}
+.poster-container a {
+    text-decoration: none;
+    border: 1px solid black;
+    padding: 0.5em 1em;
+    display: block;
+    width: 40%;
+    margin: auto;
+    font-size: 1.1em;
+    font-weight: 900;
+    color: black;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.poster-container a:hover {
+    background-color: #008080;
+    color: white;
+}
+
+@media only screen and (max-width: 700px) {
+    .games-container {
+        flex-wrap: wrap;
+    }
+    .poster-container {
+        flex-basis: 100%;
+    }
+}
