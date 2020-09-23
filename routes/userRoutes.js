@@ -68,7 +68,7 @@ userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),
 })
 
 // get users sorted by best score for a specific game
-userRouter.get('/:game', (req, res) => {
+userRouter.get('/rank/:game', (req, res) => {
 
     let {game} = req.params
 
