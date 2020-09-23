@@ -67,8 +67,15 @@ userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),
     res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
 })
 
-userRouter.get('/', (req, res) => {
-    User.find().sort({bestScore: -1})
+// get users sorted by best score for a specific game
+userRouter.get('/:game', (req, res) => {
+
+    let {game} = req.params
+    let gameScore = `${game}.bestScore`
+    let sortingMethod = {}
+    sortingMethod[gameScore] = -1
+
+    User.find({}, `username ${gameScore}`).sort(sortingMethod)
     .then(users => res.json(users))
     .catch(err => res.status(400).json(err))
 })
