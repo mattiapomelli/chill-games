@@ -95,28 +95,32 @@ export default class Player {
         }
     }
 
-    performAttack(list) {
+    performAttack(list, stats) {
         //if(actor.attackCounter > 25){   //every 1 sec	
           //actor.attackCounter = 0;
         if(this.x === 650 && this.y === 183){        //checks if the player is in the right position to shoot(next to the cannon one)
           generateBullet(list, this,630,220,'one');
           //console.log('one
-          this.number_of_bullets--;	}
+          this.number_of_bullets--;
+          stats.bulletsShot ++
+        }
   
         if(this.x === 685 && this.y === 183){        //checks if the player is in the right position to shoot(next to the cannon two)
           generateBullet(list, this,775,220,'two');
           //console.log('two');
           this.number_of_bullets--;
+          stats.bulletsShot++
         }
     }
 
-    performSpecialAttack(list) {
+    performSpecialAttack(list, stats) {
         if(this.x === 650 && this.y === 183){      
           generateBullet(list, this,630,220,'one');
           generateBullet(list, this,630,220,'one',this.aimAngle + 10);
           generateBullet(list, this,630,220,'one',this.aimAngle - 10);
   
           this.number_of_bullets--;	
+          stats.bulletsShot +=3
         }
   
         if(this.x === 685 && this.y === 183){       
@@ -124,6 +128,7 @@ export default class Player {
           generateBullet(list, this,775,220,'two',this.aimAngle + 10);
           generateBullet(list, this,775,220,'two',this.aimAngle - 10);
           this.number_of_bullets--;
+          stats.bulletsShot +=3
         }
         this.special_bullets ++;
     }

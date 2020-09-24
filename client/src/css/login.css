@@ -80,6 +80,11 @@
 }
 .redirect-text a {
     text-decoration: none;
+    color: rgb(58, 30, 136);
+    font-weight: 700;
+}
+.redirect-text a:hover {
+    text-decoration: underline;
 }
 
 .guest-text {

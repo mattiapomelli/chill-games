@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import "../css/ranking.css"
 
 const Ranking = () => {
-    const {loggedUser} = useContext(AuthContext)
+    const {loggedUser, isAuthenticated} = useContext(AuthContext)
     const [users, setUsers] = useState([])
     const [currentGame, setCurrentGame] = useState('zombiegame')
 
@@ -52,7 +52,7 @@ const Ranking = () => {
     }
 
     return(
-        <div className="ranking-container">
+        <div className="page-container">
             <div className="ranking-buttons">
                 <button className="rank-tab tab active" onClick={(event) => {setCurrentGame('zombiegame'); styleActiveTab(event)}}>Zombie Game</button>
                 <button className="rank-tab tab" onClick={(event) => {setCurrentGame('cargame'); styleActiveTab(event)}}>Car Game</button>
@@ -79,7 +79,7 @@ const Ranking = () => {
                                     return(
                                         <tr key={index} className={`${user._id === loggedUser._id ? "current-user-row " : ""}${getClass(index)}`}>
                                             <td>{index + 1}</td>
-                                            <td><Link to={`/user/${user._id}`}>{user.username}</Link></td>
+                                            <td><Link to={{pathname: `/user/${user._id}`, state: { fromRanking: true}}}>{user.username}</Link></td>
                                             <td>{user.score}</td>
                                         </tr>
                                     )
@@ -90,11 +90,12 @@ const Ranking = () => {
                 </div>
 
                 <div className="scroll-buttons-container">
+                    { isAuthenticated && 
                     <svg className="scroll-to-user scroll-button" onClick={scrollTableToUser} viewBox="0 0 50 50" fill="none">
                         <circle cx="25" cy="25" r="25"/>
                         <path d="M25 26.4333C20.3333 26.4333 11 29 11 33.6667V36H39V33.6667C39 29 29.6667 26.4333 25 26.4333Z" fill="white"/>
                         <circle cx="25" cy="17" r="7" fill="white"/>
-                    </svg>
+                    </svg> }
                     <svg className="scroll-to-top scroll-button" onClick={scrollTableToTop} viewBox="0 0 50 50" fill="none">
                         <circle cx="25" cy="25" r="25"/>
                         <path d="M13 29L25 17L37 29" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>

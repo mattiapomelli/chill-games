@@ -4,15 +4,6 @@
 
 }
 
-.ranking-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: column;
-    height: 92vh;
-    font-family: 'Courier New', Courier, monospace;
-}
-
 .table-container {
     position: relative;
     padding-top: var(--table-headers-height);
@@ -95,21 +86,22 @@ td {
 
 /* Decorations */
 
-.current-user-row {
-    background-color: rgba(205, 92, 92, 0.637);
-}
+
 .current-user-row td:nth-child(2) {
     font-weight: 900;
 }
 
 .first {
-    background-color: rgba(255, 217, 0, 0.6);
+    background-color: rgba(255, 217, 0, 0.5);
 }
 .second {
-    background-color: rgba(192, 192, 192, 0.6);
+    background-color: rgba(192, 192, 192, 0.5);
 }
 .third {
-    background-color: rgba(199, 90, 0, 0.6);
+    background-color: rgba(199, 90, 0, 0.5);
+}
+.current-user-row {
+    background-color: rgba(205, 92, 92, 0.637);
 }
 .first td:first-child, .second td:first-child , .third td:first-child  {
     font-weight: 900;
@@ -119,6 +111,10 @@ td {
 td a {
     text-decoration: none;
     color: black;
+}
+
+td a:hover {
+    text-decoration: underline;
 }
 
 
@@ -184,7 +180,7 @@ td a {
     font-size: 1.1em;
 }
 
-.active {
+.rank-tab.active {
     border-color: black !important;
     background-color: #444;
     color: white;

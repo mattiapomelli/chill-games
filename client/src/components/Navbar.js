@@ -14,11 +14,11 @@ const Navbar = () => {
 					{/* <span>Your record is: {loggedUser.bestScore}</span> */}
 
 					<Link className="menu-item" to="/ranking">
-						<span class="material-icons">emoji_events</span>RANKING
+						<span className="material-icons">emoji_events</span>RANKING
 					</Link>
 
 					<Link className="menu-item" to="/">
-						<span class="material-icons">videogame_asset</span>PLAY
+						<span className="material-icons">videogame_asset</span>PLAY
 					</Link>
 
 					{

@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext"
 import { GameContext } from "../context/GameContext"
 import {Link} from "react-router-dom"
 
-const Register = () => {
+const Register = (props) => {
     const [user, setUser] = useState({username: "", password: "", password2:""})
     const [message, setMessage] = useState("")
     const {finalScore, stats, activeGame} = useContext(GameContext)
@@ -26,6 +26,11 @@ const Register = () => {
                 setMessage(message.msgBody)
             }
         })
+    }
+
+    const signAsGuest = () => {
+        setIsGuest(true);
+        props.history.push('/')
     }
 
     const onChange = (e) => {
@@ -59,7 +64,7 @@ const Register = () => {
 
             </div>
 
-            <p className="guest-text"> Continue as a guest </p>
+            <p className="guest-text" onClick={signAsGuest}> Continue as a guest </p>
 
             <Message message={message}/>
         </div>

@@ -21,7 +21,6 @@ const ZombieGame = () => {
         }
 
         setGameOver(false)
-        console.log('game started')
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                             window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
@@ -31,7 +30,7 @@ const ZombieGame = () => {
         var gameEnded = false
         var gamePaused = false
         
-        var gameStats = {enemiesKilled: 0, zombiesKilled: 0, wolvesKilled: 0}
+        var gameStats = {timesPlayed: 1, enemiesKilled: 0, bulletsShot: 0}
       
         let canvas, ctx;
         let buffer;
@@ -142,7 +141,6 @@ const ZombieGame = () => {
         //EVENT LISTENERS
         // key handlers
         function keyDownHandler(event){
-          console.log(event.keyCode)
             if(player1.confused){
               keyCodeD = 65;
               keyCodeA = 68;
@@ -257,11 +255,14 @@ const ZombieGame = () => {
         //bullet shooting
         document.onclick = function(mouse){   //on left click
             if(continue_update && player1.can_shoot){
-              if(player1.special_attack)
-                player1.performSpecialAttack(bulletList);
-              else
-                player1.performAttack(bulletList);
+              if(player1.special_attack) {
+                player1.performSpecialAttack(bulletList, gameStats);
+              }
+              else {
+                player1.performAttack(bulletList, gameStats);
+              }
             }
+            console.log(gameStats)
            
             if(poison_active){
               placing_poison = false;
@@ -306,7 +307,6 @@ const ZombieGame = () => {
 
           if(gameEnded || gamePaused){
             //buffer.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
-            console.log('end/pause loop')
             myRequest = requestAnimationFrame(gameLoop);
             if(gamePaused){
               // buffer.globalAlpha = 0.2;
@@ -725,7 +725,7 @@ const ZombieGame = () => {
       
           //GIVEN UPGRADES
           if(frameCount === 30) 
-            randomlyGenerateUpgrade(upgradeList, frameCount, 'poison', [{x:130,y:125,w:35,h:35}])
+            randomlyGenerateUpgrade(upgradeList, frameCount, 'special_attack', [{x:130,y:125,w:35,h:35}])
           if(frameCount === 8000)
             randomlyGenerateUpgrade(upgradeList, frameCount, 'recharge',[{x:130,y:20,w:35,h:35}]);
           if(frameCount === 11500)
@@ -771,7 +771,7 @@ const ZombieGame = () => {
               }
             }
       
-            if(enemyList[key].hp === 0)
+            if(enemyList[key].hp <= 0)
               enemyList[key].toRemove = true;
           }
           if(player1.sick)
@@ -894,14 +894,13 @@ const ZombieGame = () => {
           
           if(towerLife === 0){
             gameEnded = true
-            //cancelAnimationFrame(myRequest)
+            
             endGame(score, gameStats, 'zombiegame')
             //return
           }
       
 
           myRequest = requestAnimationFrame(gameLoop);
-          console.log('loop')
         }
         myRequest = requestAnimationFrame(gameLoop);
       
@@ -987,8 +986,8 @@ const ZombieGame = () => {
               </div>
             </div>
 
-            <div id="zombiegameComands" class="modal">
-              <div class="modal-content">
+            <div id="zombiegameComands" className="modal">
+              <div className="modal-content">
                 <span className="close" onClick={closeCommands}>&times;</span>
 
                 <p>GOAL: Defend the tower from the enemies coming from both sides. Help yourself by collecting upgrades which appear in the worlddadaa</p>

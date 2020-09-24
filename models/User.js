@@ -17,9 +17,9 @@ const UserSchema = new mongoose.Schema({
             default: 0
         },
         stats: {
+            timesPlayed: {type: Number, default: 0},
             enemiesKilled: {type: Number, default: 0},
-            zombiesKilled: {type: Number, default: 0},
-            wolvesKilled: {type: Number, default: 0},
+            bulletsShot: {type: Number, default: 0},
         }
     },
     cargame: {
@@ -28,8 +28,7 @@ const UserSchema = new mongoose.Schema({
             default: 0
         },
         stats: {
-            obstaclesHit: {type: Number, default: 0},
-            gasCollected: {type: Number, default: 0},
+            timesPlayed: {type: Number, default: 0},
         }
     },
     created: {

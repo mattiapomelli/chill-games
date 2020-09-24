@@ -31,7 +31,7 @@ const CarGame = () => {
         var gameEnded = false
         var gamePaused = false
 
-        var gameStats = {obstaclesHit: 0, gasCollected: 0}
+        var gameStats = {timesPlayed: 1}
 
         /* Buffer */
         let buffer;

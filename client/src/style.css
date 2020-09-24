@@ -16,3 +16,12 @@ html, body, #root, #root>div .App {
 body {
     background-color: rgb(217, 239, 245);
 }
+
+.page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    height: 92vh;
+    font-family: 'Courier New', Courier, monospace;
+}

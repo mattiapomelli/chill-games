@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useContext} from "react"
+import React, {useState, useEffect, useContext, Fragment} from "react"
 import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
 import AuthService from "../services/AuthService"
 import axios from "axios"
 import "../css/profile.css"
+import { Link } from "react-router-dom"
 
 const Profile = (props) => {
     const {setIsAuthenticated, setLoggedUser, loggedUser } = useContext(AuthContext)
@@ -33,16 +34,25 @@ const Profile = (props) => {
     const onTabClick = (event) => {
         setCurrentGame(event.target.name)
 
-        event.target.classList.add('active2')
+        event.target.classList.add('active')
         let tabs = document.getElementsByClassName('game-tab')
         for (let tab of tabs) {
-            tab !== event.target && tab.classList.remove('active2')
+            tab !== event.target && tab.classList.remove('active')
         }
     }
 
+    const camelCaseToSentence = (text) => {
+        let result = text.replace( /([A-Z])/g, " $1" );
+        let finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+        return finalResult
+    }
+
     return (
-        <div className="profile-container">
+        <div className="page-container">
+            
             { loaded ?
+            <Fragment>
+            {props.location.state && <Link to="/ranking" className="backto-link">&lt;- Back</Link>} 
             <div className="profile-card">
                 <div className="profile-header">
                     <div className="profile-avatar">
@@ -57,17 +67,26 @@ const Profile = (props) => {
 
                 <div className="profile-body">
                     <div className="tabs-container">
-                        <button onClick={onTabClick} className="game-tab tab active2" name="zombiegame">Zombie Game</button>
+                        <button onClick={onTabClick} className="game-tab tab active" name="zombiegame">Zombie Game</button>
                         <button onClick={onTabClick} className="game-tab tab" name="cargame">Car Game</button>
                     </div>
                     <div className="profile-statistics">
                         <h2>Best Score: {user[currentGame].bestScore}</h2>
+                        {
+                            
+                            Object.keys(user[currentGame].stats).map((keyName, keyIndex) => {
+                                return(
+                                    <h4 key={keyIndex}>{camelCaseToSentence(keyName)}: {user[currentGame].stats[keyName]}</h4>
+                                )
+                            })     
+                        }
                     </div>
                 </div>
                 
                 { user._id === loggedUser._id && <button className="logout-button secondary-button" onClick={logOut}>Logout</button>}
                 
             </div>
+            </Fragment>
             
             : "Loading..." }
         </div>

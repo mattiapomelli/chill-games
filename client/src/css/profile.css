@@ -1,18 +1,10 @@
-.profile-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: column;
-    height: 92vh;
-    font-family: 'Courier New', Courier, monospace;
-}
-
 .profile-card {
     width: 500px;
     background-color: #eee;
     padding: 1.2em;
     box-sizing: border-box;
     border: 1px solid rgb(190, 190, 190);
+    margin-bottom: 2em;
 }
 
 .profile-header {
@@ -30,6 +22,7 @@
     width: 3em;
     border-radius: 100%;
     margin-right: 0.5em;
+    border: 1px solid #bbb;
 }
 
 .joined-date {
@@ -48,9 +41,10 @@
     background-color: #fff;
     border: 1px solid rgb(190, 190, 190);
     padding: 1.2em;
+    height: 100px;
 }
 
-.active2 {
+.game-tab.active {
     border-color: black !important;
     background-color: #008080;
     color: white;
@@ -68,4 +62,20 @@
     outline: none;
     font-family: 'Courier New', Courier, monospace;
     font-size: 1em;
+}
+
+.tab:not(.active):hover {
+    background-color: #ddd;
+}
+
+
+/* Back to link */
+.backto-link {
+    text-decoration: none;
+    color: black;
+    float: left;
+    margin-bottom: 1em;
+}
+.backto-link:hover {
+    text-decoration: underline;
 }
