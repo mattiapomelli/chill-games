@@ -2,8 +2,12 @@ const express = require('express')
 const userRouter = express.Router()
 const passport = require('passport')
 const passportConfig = require('../passport')
+const bcrypt = require('bcryptjs')
 const JWT = require('jsonwebtoken')
 const User = require('../models/User')
+
+const validateRegisterInput = require("../validation/registerValidation");
+const validateLoginInput = require("../validation/loginValidation");
 
 const signToken = userID => {
     return JWT.sign({               //returns tha actual jwt token
@@ -13,7 +17,13 @@ const signToken = userID => {
 }
 
 userRouter.post('/register', (req, res) => {
-    const {username, bestScore, stats, game} = req.body
+
+    const { errors, isValid } = validateRegisterInput(req.body);
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const {username, password, bestScore, stats, game} = req.body
     User.findOne({username}, (err, user) => {
         if(err)
             res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
@@ -24,26 +34,42 @@ userRouter.post('/register', (req, res) => {
             let schema = {}
             schema[game] = {bestScore, stats}
             schema["username"] = username
+            //schema["password"] = password
 
             const newUser = new User(schema)
-            newUser.save(err => {
-                if(err)
-                    res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
-                else {
-                    const {_id, username, bestScore} = newUser
-                    const token = signToken(_id)
-                    res.cookie('access_token', token, {httpOnly: true, sameSite: true})
-                    res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
-                    //res.status(201).json({message: {msgBody: "Account successfully created", msgError: false}})
-                }
+
+            console.log(newUser)
+
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(password, salt, (err, passwordHash) => {
+                    if(err)
+                        throw err
+                    newUser.password = passwordHash
+                    newUser.save(err => {
+                        if(err)
+                            res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
+                        else {
+                            const {_id, username, bestScore} = newUser
+                            const token = signToken(_id)
+                            res.cookie('access_token', token, {httpOnly: true, sameSite: true})
+                            res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
+                            //res.status(201).json({message: {msgBody: "Account successfully created", msgError: false}})
+                        }
+                    })
+                })
             })
         }
     })
 })
 
-userRouter.post('/login', (req, res)=>{
+userRouter.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginInput(req.body);
+    //console.log(errors)
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
 
-    const { username } = req.body
+    const { username, password } = req.body
     User.findOne({username}, (err, user) => {   //we look for the user
         //  something went wrong with database
         if(err)          
@@ -52,12 +78,16 @@ userRouter.post('/login', (req, res)=>{
         if(!user)
             return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
         // check if password is correct 
-
-        const {_id, username, bestScore} = user
-        const token = signToken(_id)
-        res.cookie('access_token', token, {httpOnly: true, sameSite: true})
-        res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
-
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if(isMatch) {
+                const {_id, username, bestScore} = user
+                const token = signToken(_id)
+                res.cookie('access_token', token, {httpOnly: true, sameSite: true})
+                res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
+            } else {
+                return res.status(400).json({message: {msgBody: "Password incorrect", msgError: true}})
+            }
+        })
     })
 })
 

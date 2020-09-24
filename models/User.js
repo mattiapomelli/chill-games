@@ -7,6 +7,10 @@ const UserSchema = new mongoose.Schema({
         min: 6,
         max: 14
     },
+    password: {
+        type: String,
+        required: true
+    },
     zombiegame: {
         bestScore: {
             type: Number,
