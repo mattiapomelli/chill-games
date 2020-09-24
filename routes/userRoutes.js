@@ -119,29 +119,35 @@ userRouter.get('/rank/:game', (req, res) => {
 //update user's best score and stats
 userRouter.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    let {game, score, stats} = req.body
+    const {_id} = req.user //user who made the request
 
-    let statsUpdate = {}
-    for (const [key, value] of Object.entries(stats)) {
-        statsUpdate[`${game}.stats.${key}`] = value
+    if(_id.toString() === req.params.id.toString()) {   // verify that the user making the request is updating his own profile
+        let {game, score, stats} = req.body
+
+        let statsUpdate = {}
+        for (const [key, value] of Object.entries(stats)) {
+            statsUpdate[`${game}.stats.${key}`] = value
+        }
+    
+        let scoreUpdate = {}
+        scoreUpdate[`${game}.bestScore`] = score
+    
+        User.findByIdAndUpdate(req.params.id, {
+            $max: scoreUpdate,
+            $inc: statsUpdate
+        }, {new: true}, //to return the updated document and not the original one
+        (err, user) => {
+            if(err)
+                res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
+            if(!user)
+                return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
+    
+            const {_id, username} = user
+            return res.status(200).json({username, _id})
+        })
+    } else {
+        return res.status(400).json({message: {msgBody: "You are trying to update someone else's profile", msgError: true}})
     }
-
-    let scoreUpdate = {}
-    scoreUpdate[`${game}.bestScore`] = score
-
-    User.findByIdAndUpdate(req.params.id, {
-        $max: scoreUpdate,
-        $inc: statsUpdate
-    }, {new: true}, //to return the updated document and not the original one
-    (err, user) => {
-        if(err)
-            res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
-        if(!user)
-            return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
-
-        const {_id, username} = user
-        return res.status(200).json({username, _id})
-    })
 })
 
 userRouter.get('/:id', (req, res) => {
