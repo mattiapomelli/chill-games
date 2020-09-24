@@ -929,16 +929,18 @@ const ZombieGame = () => {
             <div className="canvas-container">
                 <canvas id="ctx" width="1400" height="600"></canvas>         
             </div>
-            {
-              gameOver &&
-              <div>
-                {!isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
-                <div className="buttons-container">
-                  {!isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
-                  <Link to="/" className="quit-game-button button">Exit</Link>
-                </div>
+            
+
+            <div className="controls-container">
+              {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
+
+              <div className="buttons-container">
+                  {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
+                  <Link to="/" className="secondary-button button">Comands</Link>
+                  <Link to="/" className="secondary-button button">Exit</Link>
               </div>
-            }
+            </div>
+
         </div>
     )
 }

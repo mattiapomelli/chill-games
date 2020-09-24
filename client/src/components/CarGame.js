@@ -119,13 +119,14 @@ const CarGame = () => {
         document.addEventListener('keyup', keyUpHandler, false);
 
         function updateEntity(entity) {
-            entity.draw(buffer)
+            buffer.drawImage(entity.img, entity.x, entity.y, entity.width, entity.height);
+            //entity.draw(buffer)
             if(continue_update)
                 entity.move()
         }
 
         function updateCar(){
-            car.draw(buffer)
+            buffer.drawImage(car.img, car.x, car.y, car.width, car.height);
             car.move()	
         }
 
@@ -143,7 +144,7 @@ const CarGame = () => {
         }
 
         function updatePoliceCar(){
-            policecar.draw(buffer)
+            buffer.drawImage(policecar.img, policecar.x, policecar.y, policecar.width, policecar.height);
             if(policecar.onposition)
                 policecar.move(car)
         }
@@ -196,7 +197,8 @@ const CarGame = () => {
                 randomlyGenerateStripe(stripeList);
             }
             for(let key in stripeList){
-                updateEntity(stripeList[key]);
+                stripeList[key].draw(buffer)
+                stripeList[key].move()
             }
 
             //OIL
@@ -217,7 +219,7 @@ const CarGame = () => {
             if(frameCount % 249 === 0 && continue_update){
                 randomlyGenerateGas(gasList);
             }
-            if(frameCount % 332 === 0 && continue_update){
+            if(frameCount % 300 === 0 && continue_update){    //332
                 gaslevel--;
                 if(gaslevel === 0)
                     gameover = true;
@@ -363,16 +365,18 @@ const CarGame = () => {
             <canvas id="carCanvas" width="900" height="700"></canvas>
         </div>
 
-            {
-              gameOver &&
-              <div>
-                {!isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
-                <div className="buttons-container">
-                  {!isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
-                  <Link to="/" className="quit-game-button button">Exit</Link>
-                </div>
-              </div>
-            }
+
+
+        <div className="controls-container">
+            {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
+
+            <div className="buttons-container">
+                {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
+                <Link to="/" className="secondary-button button">Comands</Link>
+                <Link to="/" className="secondary-button button">Exit</Link>
+            </div>
+        </div>
+
         </div>
     )
 }

@@ -7,6 +7,11 @@ canvas {
     margin: auto;
 }
 
+.controls {
+    display: flex;
+}
+
+
 .button {
     margin: 1em;
     padding: 0.7em;
@@ -27,20 +32,9 @@ canvas {
     -ms-user-select: none;
 }
 
-.quit-game-button {
-    background-color: rgb(212, 212, 212);
-    color: black;
-}
-
-.primary-button {
-    background-color: #008080;
-    color: white;
-}
-.primary-button:hover {
-    background-color: #005555;
-}
-.quit-game-button:hover {
-    background-color: rgb(175, 175, 175);
+.controls-container {
+    width: 400px;
+    margin: auto;
 }
 
 .buttons-container {
@@ -48,6 +42,20 @@ canvas {
     justify-content: center;
 }
 
+.secondary-button {
+    background-color: rgb(212, 212, 212);
+    color: black;
+}
+.secondary-button:hover {
+    background-color: rgb(175, 175, 175);
+}
+.primary-button {
+    background-color: #008080;
+    color: white;
+}
+.primary-button:hover {
+    background-color: #005555;
+}
 
 
 .gameover-message {
