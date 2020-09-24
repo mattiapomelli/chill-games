@@ -14,6 +14,13 @@ const CarGame = () => {
 
     useEffect(() => {
 
+        const modal = document.getElementById('cargameComands')
+        window.onclick = function(event) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        }
+
         setGameOver(false)
         console.log('game started')
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -22,6 +29,7 @@ const CarGame = () => {
         var myRequest;
 
         var gameEnded = false
+        var gamePaused = false
 
         var gameStats = {obstaclesHit: 0, gasCollected: 0}
 
@@ -104,6 +112,14 @@ const CarGame = () => {
             if(event.keyCode === 32 && gameover){
                 startNewGame();
             }
+            if(event.keyCode === 27 && !gameEnded) {
+                gamePaused = !gamePaused
+            }
+        }
+
+        function pauseWhenCommandsOpen() {
+            if(!gameEnded && !gamePaused)
+              gamePaused = true
         }
 
         function keyUpHandler(event){
@@ -117,6 +133,7 @@ const CarGame = () => {
 
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);
+        canvas.addEventListener('pause', pauseWhenCommandsOpen)
 
         function updateEntity(entity) {
             buffer.drawImage(entity.img, entity.x, entity.y, entity.width, entity.height);
@@ -151,7 +168,11 @@ const CarGame = () => {
 
         function gameLoop(){
             scaleCanvas();
-            if(gameEnded){
+            if(gameEnded || gamePaused){
+                if(gamePaused){
+                    buffer.fillStyle = 'black';
+                    buffer.fillText('PAUSED',410,310);
+                }
                 console.log('end loop');
                 context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
                 myRequest = requestAnimationFrame(gameLoop);
@@ -359,6 +380,22 @@ const CarGame = () => {
 
     }, [endGame, setGameOver])
 
+    const openCommands = (event) => {
+        //pause the game
+        let canvas = document.getElementById("carCanvas")
+        const pauseEvent = new Event('pause');
+        canvas.dispatchEvent(pauseEvent)
+  
+        //open modal
+        const modal = document.getElementById("cargameComands");
+        modal.style.display = "block"
+      }
+  
+      const closeCommands = () => {
+        const modal = document.getElementById("cargameComands");
+        modal.style.display = "none"
+    }
+
     return (
         <div>
         <div className="canvas-container">
@@ -368,14 +405,28 @@ const CarGame = () => {
 
 
         <div className="controls-container">
-            {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
-
-            <div className="buttons-container">
-                {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
-                <Link to="/" className="secondary-button button">Comands</Link>
-                <Link to="/" className="secondary-button button">Exit</Link>
+              {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
+              {!gameOver && <div className="gameover-message">Press Esc to pause / unpause</div>}
+              <div className="buttons-container">
+                  {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
+                  <span className="secondary-button button" onClick={openCommands}>Commands</span>
+                  <Link to="/" className="secondary-button button">Exit</Link>
+              </div>
             </div>
-        </div>
+
+            <div id="cargameComands" class="modal">
+              <div class="modal-content">
+                <span className="close" onClick={closeCommands}>&times;</span>
+
+                <p>GOAL: Avoid the obstacles and cllect the cans of gasoline to don't run out of gas. Be careful to don't be caught by police</p>
+
+                <div className="command">
+                  <div className="command-key">Arrow keys</div>
+                  <div className="command-description">Move left and right to avoid obstacles</div>
+                </div>
+              </div>
+
+            </div>
 
         </div>
     )

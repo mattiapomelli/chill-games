@@ -1,3 +1,11 @@
+.game-container {
+    user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
 .canvas-container {
     display: flex;
     justify-content: center;
@@ -13,7 +21,7 @@ canvas {
 
 
 .button {
-    margin: 1em;
+    margin: 0.5em 1em 0.1em 1em;
     padding: 0.7em;
     cursor: pointer;
     border: 1px solid #777;
@@ -25,15 +33,9 @@ canvas {
     text-align: center;
     width: 120px;
     text-transform: uppercase;
-    user-select: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
 }
 
 .controls-container {
-    width: 400px;
     margin: auto;
 }
 
@@ -63,6 +65,78 @@ canvas {
     text-decoration: none;
     color: black;
     text-align: center;
-    width: 300px;
-    margin: 1em auto 0 auto;
+    margin: 0.8em auto 0 auto;
+}
+
+
+/* Comands Modal */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+
+/* Modal Content */
+.modal-content {
+    background-color: #eee;
+    font-family: 'Courier New', Courier, monospace;
+    margin: auto;
+    padding: 2em 1.5em 1.5em 1.5em;
+    box-sizing: border-box;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+}
+.modal-content p {
+    margin-bottom: 1em;
+}
+
+.command {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.4em;
+}
+.command-key {
+    border: 1px solid #333;
+    padding: 1em;
+    font-weight: 900;
+    background-color: rgb(199, 199, 199);
+    width: 20%;
+}
+.command-description {
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: #333;
+    padding: 1em;
+    width: 80%
 }

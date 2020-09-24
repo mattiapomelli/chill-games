@@ -12,6 +12,14 @@ const ZombieGame = () => {
     const {isAuthenticated} = useContext(AuthContext)
 
     useEffect(() => {
+
+        const modal = document.getElementById('zombiegameComands')
+        window.onclick = function(event) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        }
+
         setGameOver(false)
         console.log('game started')
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -21,6 +29,7 @@ const ZombieGame = () => {
       
         //VARIABLES
         var gameEnded = false
+        var gamePaused = false
         
         var gameStats = {enemiesKilled: 0, zombiesKilled: 0, wolvesKilled: 0}
       
@@ -133,7 +142,7 @@ const ZombieGame = () => {
         //EVENT LISTENERS
         // key handlers
         function keyDownHandler(event){
-          console.log('keydown')
+          console.log(event.keyCode)
             if(player1.confused){
               keyCodeD = 65;
               keyCodeA = 68;
@@ -178,6 +187,9 @@ const ZombieGame = () => {
             }
             if(event.keyCode === 32 && !continue_update){
               startNewGame();
+            }
+            if(event.keyCode === 27 && !gameEnded) {
+              gamePaused = !gamePaused
             }
         }
 
@@ -229,11 +241,17 @@ const ZombieGame = () => {
             poison_x = mouseX - 220;
           }
         }
+
+        function pauseWhenCommandsOpen() {
+          if(!gameEnded && !gamePaused)
+            gamePaused = true
+        }
       
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);   
         canvas.addEventListener('mousemove', mouseMoveHandler, false)
         //window.addEventListener('resize', scaleCanvas)
+        canvas.addEventListener('pause', pauseWhenCommandsOpen)
         
         
         //bullet shooting
@@ -284,11 +302,21 @@ const ZombieGame = () => {
         function gameLoop() {
           //requestId = undefined
           scaleCanvas();
+          //if(gamePaused) console.log('pause')
 
-          if(gameEnded){
-            console.log('end loop')
+          if(gameEnded || gamePaused){
+            //buffer.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+            console.log('end/pause loop')
             myRequest = requestAnimationFrame(gameLoop);
+            if(gamePaused){
+              // buffer.globalAlpha = 0.2;
+              // buffer.fillStyle = "blue"; 
+              // buffer.fillRect(50, 50, 75, 50); 
+              buffer.fillStyle = 'black';
+              buffer.fillText('PAUSED',660,180);
+              }
             ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
+              
             return
           }
 
@@ -296,7 +324,7 @@ const ZombieGame = () => {
           buffer.font = '20px Arial';
           if(towerLife > 0)
 		        frameCount++;
-          buffer.fillText(frameCount,400,100);
+          //buffer.fillText(frameCount,400,100);
           
           if(frameCount === 10)
           randomlyGenerateEnemy(enemyList, 'zombie',  300,   385,   0.7,  65, 65, [{x:65,y:0,w:64,h:65}],  4,   'left',     1,       5,      10);   
@@ -859,6 +887,9 @@ const ZombieGame = () => {
 
             
           }
+
+          
+
           ctx.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
           
           if(towerLife === 0){
@@ -917,15 +948,30 @@ const ZombieGame = () => {
             cancelAnimationFrame(myRequest)
             document.removeEventListener('keydown', keyDownHandler);
             document.removeEventListener('keyup', keyUpHandler);   
-            canvas.removeEventListener('mousemove', mouseMoveHandler)
+            canvas.removeEventListener('mousemove', mouseMoveHandler);
+            canvas.removeEventListener('pause', pauseWhenCommandsOpen);
         }
 
     }, [endGame, setGameOver])
 
+    const openCommands = (event) => {
+      //pause the game
+      let canvas = document.getElementById("ctx")
+      const pauseEvent = new Event('pause');
+      canvas.dispatchEvent(pauseEvent)
 
+      //open modal
+      const modal = document.getElementById("zombiegameComands");
+      modal.style.display = "block"
+    }
+
+    const closeCommands = () => {
+      const modal = document.getElementById("zombiegameComands");
+      modal.style.display = "none"
+    }
 
     return(
-        <div>
+        <div className="game-container">
             <div className="canvas-container">
                 <canvas id="ctx" width="1400" height="600"></canvas>         
             </div>
@@ -933,12 +979,34 @@ const ZombieGame = () => {
 
             <div className="controls-container">
               {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
-
+              {!gameOver && <div className="gameover-message">Press Esc to pause / unpause</div>}
               <div className="buttons-container">
                   {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
-                  <Link to="/" className="secondary-button button">Comands</Link>
+                  <span className="secondary-button button" onClick={openCommands}>Commands</span>
                   <Link to="/" className="secondary-button button">Exit</Link>
               </div>
+            </div>
+
+            <div id="zombiegameComands" class="modal">
+              <div class="modal-content">
+                <span className="close" onClick={closeCommands}>&times;</span>
+
+                <p>GOAL: Defend the tower from the enemies coming from both sides. Help yourself by collecting upgrades which appear in the worlddadaa</p>
+
+                <div className="command">
+                  <div className="command-key">W, A, S, D</div>
+                  <div className="command-description">Move around and Jump</div>
+                </div>
+                <div className="command">
+                  <div className="command-key">Spacebar</div>
+                  <div className="command-description">Punch the enemies</div>
+                </div>
+                <div className="command">
+                  <div className="command-key">Mouse click</div>
+                  <div className="command-description">Shoot at the enemies when you are on the tower</div>
+                </div>
+              </div>
+
             </div>
 
         </div>
