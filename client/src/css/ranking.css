@@ -65,7 +65,7 @@ td {
     box-sizing: border-box;
 }
 
-.table-body tr {
+.table-body tr:not(:last-child) {
     border-bottom: 1px solid black;
 }
 
@@ -89,6 +89,7 @@ td {
     overflow-x: hidden;
     background-color: #eee;
     scroll-behavior: smooth;
+    border: 1px solid #555;
 }
 
 

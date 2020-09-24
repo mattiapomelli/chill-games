@@ -12,3 +12,7 @@ html, body, #root, #root>div .App {
     position: relative;
     overflow-x: hidden;
 }
+
+body {
+    background-color: rgb(217, 239, 245);
+}

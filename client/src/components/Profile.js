@@ -65,11 +65,11 @@ const Profile = (props) => {
                     </div>
                 </div>
                 
-                { user._id === loggedUser._id && <button className="logout-button" onClick={logOut}>Logout</button>}
+                { user._id === loggedUser._id && <button className="logout-button secondary-button" onClick={logOut}>Logout</button>}
                 
             </div>
             
-            : "Loading" }
+            : "Loading..." }
         </div>
     )
 }
