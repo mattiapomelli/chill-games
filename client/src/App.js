@@ -21,7 +21,7 @@ function App() {
   	return (
     	<div className="App">
 			{
-				location.pathname !== '/login' && location.pathname !== '/register' && <Navbar />
+				location.pathname !== '/login' && location.pathname !== '/register' && !location.pathname.match(/^\/game.*/) && <Navbar />
 			}
 			<PrivateRoute exact path="/" component={Landing}/>
 			<UnPrivateRoute path="/login" component={Login}/>

@@ -8,12 +8,5 @@ html, body, #root, #root>div .App {
     width: 100%;
 }
 
-.canvas-container {
-    display: flex;
-    justify-content: center;
-}
-canvas {
-    background: lightblue;
-    margin: auto;
-}
+
 

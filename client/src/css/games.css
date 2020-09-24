@@ -1,0 +1,60 @@
+.canvas-container {
+    display: flex;
+    justify-content: center;
+}
+canvas {
+    background: lightblue;
+    margin: auto;
+}
+
+.button {
+    margin: 1em;
+    padding: 0.7em;
+    cursor: pointer;
+    border: 1px solid #777;
+    text-decoration: none;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1em;
+    display: block;
+    text-align: center;
+    width: 120px;
+    text-transform: uppercase;
+    user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.quit-game-button {
+    background-color: rgb(212, 212, 212);
+    color: black;
+}
+
+.primary-button {
+    background-color: #008080;
+    color: white;
+}
+.primary-button:hover {
+    background-color: #005555;
+}
+.quit-game-button:hover {
+    background-color: rgb(175, 175, 175);
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.gameover-message {
+    font-family: 'Courier New', Courier, monospace;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    width: 300px;
+    margin: 1em auto 0 auto;
+}

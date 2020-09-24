@@ -4,8 +4,8 @@ import {testCollisionEntity, testCollisionEntity2 } from "../games/zombiegame/ac
 import {randomlyGenerateEnemy, randomlyGenerateUpgrade, generateEnemyBullet } from "../games/zombiegame/actions/actions"
 import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
-import Register from "./Register"
 import {Link} from "react-router-dom"
+import "../css/games.css"
 
 const ZombieGame = () => {
     const {endGame, gameOver, setGameOver} = useContext(GameContext)
@@ -929,15 +929,16 @@ const ZombieGame = () => {
             <div className="canvas-container">
                 <canvas id="ctx" width="1400" height="600"></canvas>         
             </div>
-
-            { gameOver ?
-                isAuthenticated ? "New record!" :  <Register />
-                :
-                "playing"
+            {
+              gameOver &&
+              <div>
+                {!isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
+                <div className="buttons-container">
+                  {!isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
+                  <Link to="/" className="quit-game-button button">Exit</Link>
+                </div>
+              </div>
             }
-
-            <Link to="/">Quit game</Link>
-
         </div>
     )
 }

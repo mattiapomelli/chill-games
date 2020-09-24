@@ -6,7 +6,7 @@ import PoliceCar from "../games/cargame/classes/PoliceCar"
 import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
 import {Link } from "react-router-dom"
-import Register from "../components/Register"
+import "../css/games.css"
 
 const CarGame = () => {
     const { gameOver, setGameOver, endGame} = useContext(GameContext)
@@ -363,13 +363,16 @@ const CarGame = () => {
             <canvas id="carCanvas" width="900" height="700"></canvas>
         </div>
 
-            { gameOver ?
-                isAuthenticated ?  "New record!" :  <Register />
-                :
-                "playing"
+            {
+              gameOver &&
+              <div>
+                {!isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
+                <div className="buttons-container">
+                  {!isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
+                  <Link to="/" className="quit-game-button button">Exit</Link>
+                </div>
+              </div>
             }
-
-            <Link to="/">Quit game</Link>
         </div>
     )
 }
