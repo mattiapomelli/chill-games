@@ -7,18 +7,21 @@ import "../css/login.css"
 
 const Login = (props) => {
     const [user, setUser] = useState({username: "", password: ""})
+    const [message, setMessage] = useState("")
     const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const loginUser = (e) => {
+        setMessage('')
         e.preventDefault()
-        //const user = {username}
         AuthService.login(user).then( data => {
-            const {isAuthenticated, loggedUser} = data
+            const {isAuthenticated, loggedUser, message} = data
             if(isAuthenticated){
                 setLoggedUser(loggedUser)
                 setIsAuthenticated(isAuthenticated)
                 setIsGuest(false)
                 props.history.push('/')  
+            } else {
+                setMessage(message.msgBody)
             }
         })
     }
@@ -57,7 +60,7 @@ const Login = (props) => {
             
             <p className="guest-text" onClick={signAsGuest}> Continue as a guest </p>
 
-            <Message message="Hello"/>
+            <Message message={message}/>
         </div>
     )
 }

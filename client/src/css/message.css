@@ -1,0 +1,16 @@
+.message-popup {
+    position: absolute;
+    width: 300px;
+    border:1px solid rgb(235, 82, 82);
+    background-color:  rgb(238, 164, 164);;
+    text-align: center;
+    padding: 1em;
+    box-sizing: border-box;
+    top: 10px;
+    right: -310px;
+    transition: right 0.5s;
+}
+
+.opened {
+    right: 10px;
+}

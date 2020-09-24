@@ -1,24 +1,29 @@
 import React, { useContext, useState } from "react"
 import AuthService from '../services/AuthService'
+import Message from './Message'
 import { AuthContext } from "../context/AuthContext"
 import { GameContext } from "../context/GameContext"
 import {Link} from "react-router-dom"
 
 const Register = () => {
     const [user, setUser] = useState({username: "", password: "", password2:""})
+    const [message, setMessage] = useState("")
     const {finalScore, stats, activeGame} = useContext(GameContext)
     const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const registerUser = (e) => {
+        setMessage('')
         e.preventDefault()
         const newUser = {...user, bestScore: finalScore, stats, game: activeGame}
         console.log(newUser)
         AuthService.register(newUser).then( data => {
-            const {isAuthenticated, loggedUser} = data
+            const {isAuthenticated, loggedUser, message} = data
             if(isAuthenticated){
                 setLoggedUser(loggedUser)
                 setIsAuthenticated(isAuthenticated)
                 setIsGuest(false)
+            } else {
+                setMessage(message.msgBody)
             }
         })
     }
@@ -55,6 +60,8 @@ const Register = () => {
             </div>
 
             <p className="guest-text"> Continue as a guest </p>
+
+            <Message message={message}/>
         </div>
     )
 }

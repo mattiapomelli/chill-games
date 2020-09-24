@@ -38,8 +38,6 @@ userRouter.post('/register', (req, res) => {
 
             const newUser = new User(schema)
 
-            console.log(newUser)
-
             bcrypt.genSalt(10, (err, salt) => {
                 bcrypt.hash(password, salt, (err, passwordHash) => {
                     if(err)
