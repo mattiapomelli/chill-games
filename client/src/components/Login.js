@@ -2,15 +2,16 @@ import React, { useContext, useState } from "react"
 import AuthService from '../services/AuthService'
 import { AuthContext } from "../context/AuthContext"
 import {Link} from "react-router-dom"
+import Message from './Message'
 import "../css/login.css"
 
 const Login = (props) => {
-    const [username, setUsername] = useState('')
+    const [user, setUser] = useState({username: "", password: ""})
     const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const loginUser = (e) => {
         e.preventDefault()
-        const user = {username}
+        //const user = {username}
         AuthService.login(user).then( data => {
             const {isAuthenticated, loggedUser} = data
             if(isAuthenticated){
@@ -28,7 +29,7 @@ const Login = (props) => {
     }
 
     const onChange = (e) => {
-        setUsername(e.target.value)
+        setUser({...user, [e.target.name]: e.target.value})
     }
 
     return (
@@ -39,7 +40,11 @@ const Login = (props) => {
 
                     <div className="input-container">
                         <span className="material-icons input-icon">person_outline</span>
-                        <input placeholder="Username" value={username} onChange={onChange}/>
+                        <input name="username" placeholder="Username" value={user.username} onChange={onChange}/>
+                    </div>
+                    <div className="input-container">
+                        <span className="material-icons input-icon">lock_outline</span>
+                        <input name="password" placeholder="Password" value={user.password} onChange={onChange} type="password"/>
                     </div>
 
 
@@ -51,6 +56,8 @@ const Login = (props) => {
             </div>
             
             <p className="guest-text" onClick={signAsGuest}> Continue as a guest </p>
+
+            <Message message="Hello"/>
         </div>
     )
 }

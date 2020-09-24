@@ -5,14 +5,15 @@ import { GameContext } from "../context/GameContext"
 import {Link} from "react-router-dom"
 
 const Register = () => {
-    const [username, setUsername] = useState('')
+    const [user, setUser] = useState({username: "", password: "", password2:""})
     const {finalScore, stats, activeGame} = useContext(GameContext)
     const {setLoggedUser, setIsAuthenticated, setIsGuest} = useContext(AuthContext)
 
     const registerUser = (e) => {
         e.preventDefault()
-        const user = {username, bestScore: finalScore, stats, game: activeGame}
-        AuthService.register(user).then( data => {
+        const newUser = {...user, bestScore: finalScore, stats, game: activeGame}
+        console.log(newUser)
+        AuthService.register(newUser).then( data => {
             const {isAuthenticated, loggedUser} = data
             if(isAuthenticated){
                 setLoggedUser(loggedUser)
@@ -23,7 +24,7 @@ const Register = () => {
     }
 
     const onChange = (e) => {
-        setUsername(e.target.value)
+        setUser({...user, [e.target.name]: e.target.value})
     }
 
     return (
@@ -34,7 +35,15 @@ const Register = () => {
 
                     <div className="input-container">
                         <span className="material-icons input-icon">person_outline</span>
-                        <input placeholder="Username" value={username} onChange={onChange}/>
+                        <input name="username" placeholder="Username" value={user.username} onChange={onChange}/>
+                    </div>
+                    <div className="input-container">
+                        <span className="material-icons input-icon">lock_outline</span>
+                        <input name="password" placeholder="Password" value={user.password} onChange={onChange} type="password"/>
+                    </div>
+                    <div className="input-container">
+                        <span className="material-icons input-icon">lock_outline</span>
+                        <input name="password2" placeholder="Confirm password" value={user.password2} onChange={onChange} type="password"/>
                     </div>
 
 
