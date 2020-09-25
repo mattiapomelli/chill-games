@@ -78,8 +78,11 @@ td {
     overflow-y: overlay;  /* other option could be auto */
     overflow-x: hidden;
     background-color: #eee;
-    scroll-behavior: smooth;
     border: 1px solid #555;
+}
+
+.smooth-scroll {
+    scroll-behavior: smooth;
 }
 
 

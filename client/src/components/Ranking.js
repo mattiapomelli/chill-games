@@ -1,21 +1,39 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState, useRef } from "react"
 import axios from "axios"
 import { AuthContext } from "../context/AuthContext"
 import { Link } from "react-router-dom"
 import "../css/ranking.css"
 
-const Ranking = () => {
+const Ranking = (props) => {
     const {loggedUser, isAuthenticated} = useContext(AuthContext)
     const [users, setUsers] = useState([])
-    const [currentGame, setCurrentGame] = useState('zombiegame')
+    const [currentGame, setCurrentGame] = useState(() => {
+        return props.location.state ? props.location.state.tab : "zombiegame"
+    })
+    const [loaded, setLoaded] = useState(false)
+    const tableRef = useRef()
 
     useEffect(() => { 
         axios.get(`/user/rank/${currentGame}`)
         .then(res => {
             setUsers( users => { return {...users, [currentGame]: res.data}})   // update the state keeping the old one so it stays 'cached' if already fetched it
+            setLoaded(true)
         })
         .catch(err => console.log(err))
     }, [currentGame])
+
+    useEffect(() => {
+        //console.log(props.location.state.tab)
+        const {state} = props.location
+        if(state && loaded) {
+            const list = document.getElementById("users-list").children
+            
+            console.log(state.position)
+            const element = list.item(state.position)
+            tableRef.current.scrollTop = element.offsetTop
+            //element.scrollIntoView()
+        }
+    }, [props.location, loaded])
 
     const getClass = (index) => {
         let rowClass = ""
@@ -48,18 +66,18 @@ const Ranking = () => {
         setCurrentGame(event.target.name)
 
         scrollTableToTop()
-        event.target.classList.add('active')
-        let tabs = document.getElementsByClassName('rank-tab')
-        for (let tab of tabs) {
-            tab !== event.target && tab.classList.remove('active')
-        }
+        // event.target.classList.add('active')
+        // let tabs = document.getElementsByClassName('rank-tab')
+        // for (let tab of tabs) {
+        //     tab !== event.target && tab.classList.remove('active')
+        // }
     }
 
     return(
         <div className="page-container">
             <div className="ranking-buttons">
-                <button className="rank-tab tab active" onClick={onTabClick} name="zombiegame">Zombie Game</button>
-                <button className="rank-tab tab" onClick={onTabClick} name="cargame">Car Game</button>
+                <button className={`rank-tab tab ${currentGame === "zombiegame" && "active"}`} onClick={onTabClick} name="zombiegame">Zombie Game</button>
+                <button className={`rank-tab tab ${currentGame === "cargame" && "active"}`} onClick={onTabClick} name="cargame">Car Game</button>
             </div>
             <div className="table-container">
 
@@ -75,15 +93,19 @@ const Ranking = () => {
                     </table>
                 </div>
 
-                <div className="table-body">
+                <div className="table-body smooth-scroll" ref={tableRef}>
                     <table>
-                        <tbody>
+                        <tbody id="users-list"> 
                             {   users[currentGame] ?
                                 users[currentGame].map((user, index) => {
                                     return(
                                         <tr key={index} className={`${user._id === loggedUser._id ? "current-user-row " : ""}${getClass(index)}`}>
                                             <td>{index + 1}</td>
-                                            <td><Link to={{pathname: `/user/${user._id}`, state: { fromRanking: true}}}>{user.username}</Link></td>
+                                            <td>
+                                                <Link to={{pathname: `/user/${user._id}`, state: { fromRanking: true, position: index, tab: currentGame}}}>
+                                                    {user.username}
+                                                </Link>
+                                            </td>
                                             <td>{user.score}</td>
                                         </tr>
                                     )

@@ -52,7 +52,7 @@ const Profile = (props) => {
             
             { loaded ?
             <Fragment>
-            {props.location.state && <Link to="/ranking" className="backto-link">&lt;- Back</Link>} 
+            {props.location.state && <Link to={{pathname: "/ranking", state: {position: props.location.state.position, tab: props.location.state.tab}}} className="backto-link">&lt;- Back</Link>} 
             <div className="profile-card">
                 <div className="profile-header">
                     <div className="profile-avatar">
