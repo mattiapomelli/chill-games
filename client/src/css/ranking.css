@@ -122,10 +122,15 @@ td a:hover {
     width: 10px;
 }
 ::-webkit-scrollbar-track {  /* Track */
-    background: rgb(206, 206, 206)
+    background: rgb(206, 206, 206);
+    border-left: 1px solid #555;
 }
 ::-webkit-scrollbar-thumb { /* Handle */
     background: #888;
+    border-width: 1px 0 1px 1px;
+    border-style: solid;
+    border-color: #555;
+
 }
 ::-webkit-scrollbar-thumb:hover { /* Handle on hover */
     background: #555;

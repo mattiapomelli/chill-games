@@ -24,8 +24,13 @@ const Navbar = () => {
 		})
 
 		for (let item of menuLinks) {
-			item.addEventListener('click', function() {
+			item.addEventListener('click', function(event) {
+
 				nav.classList.add('hide-mobile')
+				item.classList.add('active-link')
+				for (let link of menuLinks) {
+					link !== event.currentTarget && link.classList.remove('active-link')
+				}
 			})
 		}
 		

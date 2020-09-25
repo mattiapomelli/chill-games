@@ -44,7 +44,9 @@ const Ranking = () => {
         document.querySelector('.current-user-row').scrollIntoView()
     }
 
-    const styleActiveTab = (event) => {
+    const onTabClick = (event) => {
+        setCurrentGame(event.target.name)
+
         scrollTableToTop()
         event.target.classList.add('active')
         let tabs = document.getElementsByClassName('rank-tab')
@@ -56,8 +58,8 @@ const Ranking = () => {
     return(
         <div className="page-container">
             <div className="ranking-buttons">
-                <button className="rank-tab tab active" onClick={(event) => {setCurrentGame('zombiegame'); styleActiveTab(event)}}>Zombie Game</button>
-                <button className="rank-tab tab" onClick={(event) => {setCurrentGame('cargame'); styleActiveTab(event)}}>Car Game</button>
+                <button className="rank-tab tab active" onClick={onTabClick} name="zombiegame">Zombie Game</button>
+                <button className="rank-tab tab" onClick={onTabClick} name="cargame">Car Game</button>
             </div>
             <div className="table-container">
 
