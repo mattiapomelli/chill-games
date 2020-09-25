@@ -1,8 +1,8 @@
 .message-popup {
     position: absolute;
     width: 300px;
-    border:1px solid rgb(235, 82, 82);
-    background-color:  rgb(238, 164, 164);;
+    border:1px solid rgb(238, 138, 138);
+    background-color:  rgb(243, 196, 196);;
     text-align: center;
     padding: 1em;
     box-sizing: border-box;

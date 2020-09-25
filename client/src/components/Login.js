@@ -27,6 +27,7 @@ const Login = (props) => {
     }
 
     const signAsGuest = () => {
+        setUser({username: "", password: "", password2:""}) // to secure that if user entered a password is not exposed
         setIsGuest(true);
         props.history.push('/')
     }

@@ -1,17 +1,37 @@
-import React, {useContext} from "react"
+import React, {useContext, useEffect} from "react"
 import { AuthContext } from "../context/AuthContext"
 import { Link } from "react-router-dom"
 import "../css/navbar.css"
 
 
 const Navbar = () => {
-    const {isAuthenticated, loggedUser} = useContext(AuthContext)
+	const {isAuthenticated, loggedUser} = useContext(AuthContext)
+	
+	useEffect(() => {
+		let menu = document.getElementById("menu")
+        let nav = document.getElementById("nav")
+        let exit = document.getElementById("exit")
+
+        menu.addEventListener('click', function(e) {
+            nav.classList.toggle('hide-mobile')
+            e.preventDefault()
+        })
+
+        exit.addEventListener('click', function(e) {
+            nav.classList.add('hide-mobile')
+            e.preventDefault()
+        })
+	}, [])
 
     return (
         <div>
 			<div className="header-container">
-				<header>
+
+				<span className="material-icons hide-desktop" id="menu">menu</span>
+
+				<header className="show-desktop hide-mobile" id="nav">
 					{/* <span>Your record is: {loggedUser.bestScore}</span> */}
+
 
 					<Link className="menu-item" to="/ranking">
 						<span className="material-icons">emoji_events</span>RANKING
@@ -37,6 +57,10 @@ const Navbar = () => {
 						<Link className="navbar-login-btn" to="/login">Login</Link>
 					</div>
 					}
+
+					
+
+					<span className="material-icons hide-desktop exit-icon" id="exit">close</span>
 				</header>			
 			</div>
         </div>
