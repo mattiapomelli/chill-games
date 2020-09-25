@@ -88,6 +88,7 @@ header {
 @media only screen and (max-width: 500px) {
     .hide-mobile {
         right: -65%;
+        visibility: hidden;
     }
 
     .header-container {
@@ -98,6 +99,7 @@ header {
         padding: 0 2em;
     }
     header {
+        visibility: visible;
         flex-direction: column-reverse;
         justify-content: flex-end;
         position: fixed;
@@ -110,7 +112,7 @@ header {
         z-index: 7;
         padding: 1.2em 2em 0 2em;
         box-sizing: border-box;
-        transition: right 0.4s;
+        transition: right 0.4s, visibility 0.4s;
     }
     .navbar-right {
         margin-bottom: 1em;
@@ -126,7 +128,7 @@ header {
 
 @media only screen and (max-width: 400px) {
     .hide-mobile {
-        right: -80%;
+        right: -100%;
     }
     header {
         width: 80%;

@@ -5,7 +5,7 @@ import "../css/landing.css"
 const Landing = () => {
 
     return (
-		<div className="landing-container">
+		<div className="page-container">
 			<div className="games-container">
 				<div className="poster-container">
 					<img src="/images/covers/zombiegame.jpg" alt="game poster"></img>

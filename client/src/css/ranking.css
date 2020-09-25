@@ -1,7 +1,6 @@
 :root {
     --table-headers-height: 50px;
     --table-cell-height: 50px;
-
 }
 
 .table-container {
@@ -9,13 +8,13 @@
     padding-top: var(--table-headers-height);
     box-sizing: border-box;
     overflow: hidden;
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
     /* border: 1px solid black; */
 }
 
 table {
     width: 100%;
-    font-size: 0.8rem;
     border-collapse: collapse;
 }
 
@@ -40,7 +39,7 @@ tr td:nth-child(3), tr th:nth-child(3) { /* Thirdd column */
 th {
     color: white;
     text-align: left;
-    font-size: 1.2em;
+    font-size: 1em;
     user-select: none;
    -webkit-user-select: none;
    -khtml-user-select: none;
@@ -51,7 +50,7 @@ th {
 }
 
 td {
-    font-size: 1.2em;
+    font-size: 1em;
     height: var(--table-cell-height);
     box-sizing: border-box;
 }
@@ -161,7 +160,8 @@ td a:hover {
 /* Tabs */
 
 .ranking-buttons {
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
     display: flex;
     justify-content: space-between; 
 /*     border-radius: 1em 1em 0 0;
@@ -184,5 +184,22 @@ td a:hover {
     border-color: black !important;
     background-color: #444;
     color: white;
+}
+
+@media only screen and (max-width: 350px) {
+    :root {
+        --table-headers-height: 40px;
+        --table-cell-height: 40px;
+    }
+
+    th, td {
+        font-size: 0.9em;
+    }
+    .first td:first-child, .second td:first-child , .third td:first-child {
+        font-size: 1.1em;
+    }
+    .scroll-button {
+        width: 1.7em;
+    }
 }
 
