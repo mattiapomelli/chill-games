@@ -9,9 +9,11 @@ const Ranking = () => {
     const [users, setUsers] = useState([])
     const [currentGame, setCurrentGame] = useState('zombiegame')
 
-    useEffect(() => {
+    useEffect(() => { 
         axios.get(`/user/rank/${currentGame}`)
-        .then(res => setUsers(res.data))
+        .then(res => {
+            setUsers( users => { return {...users, [currentGame]: res.data}})   // update the state keeping the old one so it stays 'cached' if already fetched it
+        })
         .catch(err => console.log(err))
     }, [currentGame])
 
@@ -74,8 +76,8 @@ const Ranking = () => {
                 <div className="table-body">
                     <table>
                         <tbody>
-                            {
-                                users.map((user, index) => {
+                            {   users[currentGame] ?
+                                users[currentGame].map((user, index) => {
                                     return(
                                         <tr key={index} className={`${user._id === loggedUser._id ? "current-user-row " : ""}${getClass(index)}`}>
                                             <td>{index + 1}</td>
@@ -83,7 +85,7 @@ const Ranking = () => {
                                             <td>{user.score}</td>
                                         </tr>
                                     )
-                                })
+                                }) : <tr className="table-loading"><td>Loading..</td></tr>
                             }
                         </tbody>
                     </table>

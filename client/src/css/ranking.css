@@ -186,6 +186,13 @@ td a:hover {
     color: white;
 }
 
+.table-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 52%;
+}
+
 @media only screen and (max-width: 350px) {
     :root {
         --table-headers-height: 40px;
