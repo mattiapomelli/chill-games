@@ -18,7 +18,8 @@
     background-color: #eee;
     padding: 0.5em 1em;
     display: block;
-    width: 40%;
+    width: 70%;
+    box-sizing: border-box;
     margin: auto;
     font-size: 1.1em;
     font-weight: 900;
@@ -34,10 +35,15 @@
 @media only screen and (max-width: 700px) {
     .games-container {
         margin-top: 2em;
-        flex-wrap: wrap;
+        flex-direction: column;
     }
     .poster-container {
         margin-bottom: 3em;
-        flex-basis: 100%;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .poster-container img {
+        width: 90%;
     }
 }

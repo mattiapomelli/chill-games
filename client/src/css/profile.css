@@ -1,5 +1,6 @@
 .profile-card {
-    width: 500px;
+    width: 90%;
+    max-width: 500px;
     background-color: #eee;
     padding: 1.2em;
     box-sizing: border-box;
@@ -33,7 +34,7 @@
 /* Body */
 
 .profile-body {
-    width: 460px;
+    max-width: 460px;
     margin: auto;
 }
 
@@ -78,4 +79,35 @@
 }
 .backto-link:hover {
     text-decoration: underline;
+}
+
+@media only screen and (max-width: 400px) {
+    .profile-card {
+        font-size: 14px;
+    }
+    .profile-header {
+        flex-direction: column;
+    }
+    .joined-date {
+        display: flex;
+        margin-top: 0.8em;
+    }
+    .joined-date h4 {
+        margin-left: 0.4em;
+    }
+    .profile-statistics h2 {
+        font-size: 1.4em;
+    }
+    .game-tab {
+        font-size: 0.9em;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .profile-card {
+        font-size: 13px;
+    }
+    .profile-statistics {
+        height: 120px;
+    }
 }

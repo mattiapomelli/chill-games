@@ -990,7 +990,7 @@ const ZombieGame = () => {
               <div className="modal-content">
                 <span className="close" onClick={closeCommands}>&times;</span>
 
-                <p>GOAL: Defend the tower from the enemies coming from both sides. Help yourself by collecting upgrades which appear in the worlddadaa</p>
+                <p>GOAL: Defend the tower from the enemies coming from both sides. Help yourself by collecting upgrades which appear in the world</p>
 
                 <div className="command">
                   <div className="command-key">W, A, S, D</div>

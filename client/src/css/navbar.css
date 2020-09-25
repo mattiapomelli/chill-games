@@ -114,7 +114,7 @@ header {
         box-sizing: border-box;
         transition: right 0.4s, visibility 0.4s;
     }
-    .navbar-right {
+    .navbar-right, .user-info:not(.guest) {
         margin-bottom: 1em;
         border-bottom: 1px solid white;
         padding: 0.2em 0.5em 1em;   
