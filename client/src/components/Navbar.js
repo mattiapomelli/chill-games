@@ -1,10 +1,11 @@
 import React, {useContext, useEffect} from "react"
 import { AuthContext } from "../context/AuthContext"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import "../css/navbar.css"
 
 
-const Navbar = () => {
+const Navbar = (props) => {
+	let location = useLocation()
 	const {isAuthenticated, loggedUser} = useContext(AuthContext)
 	
 	useEffect(() => {
@@ -27,15 +28,22 @@ const Navbar = () => {
 			item.addEventListener('click', function(event) {
 
 				nav.classList.add('hide-mobile')
-				item.classList.add('active-link')
-				for (let link of menuLinks) {
-					link !== event.currentTarget && link.classList.remove('active-link')
-				}
 			})
 		}
 		
 
 	}, [])
+
+	useEffect(() => {	//set navbar active link and keep on page refresh
+		let oldActiveLink = document.querySelector(".active-link")
+		if(oldActiveLink) 
+			oldActiveLink.classList.remove("active-link")
+
+		let newActiveLink = document.querySelector('header a[href="' + location.pathname + '"]')
+		if(newActiveLink)
+			newActiveLink.classList.add("active-link")
+
+	}, [location.pathname])
 
     return (
         <div>
@@ -44,12 +52,10 @@ const Navbar = () => {
 				<span className="material-icons hide-desktop" id="menu">menu</span>
 
 				<header className="show-desktop hide-mobile" id="nav">
-					{/* <span>Your record is: {loggedUser.bestScore}</span> */}
 
-
-					<Link className="menu-item menu-link" to="/ranking">
+					<Link className={`menu-item menu-link`} to="/ranking">
 						<span className="material-icons">emoji_events</span>RANKING
-					</Link>
+					</Link> 
 
 					<Link className="menu-item menu-link" to="/">
 						<span className="material-icons">videogame_asset</span>PLAY
