@@ -21,7 +21,7 @@ const Login = (props) => {
                 setIsGuest(false)
                 props.history.push('/')  
             } else {
-                setMessage(message.msgBody)
+                setMessage(message)
             }
         })
     }
@@ -60,6 +60,7 @@ const Login = (props) => {
             </div>
             
             <p className="guest-text" onClick={signAsGuest}> Continue as a guest </p>
+
 
             <Message message={message}/>
         </div>

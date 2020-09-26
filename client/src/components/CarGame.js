@@ -6,10 +6,11 @@ import PoliceCar from "../games/cargame/classes/PoliceCar"
 import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
 import {Link } from "react-router-dom"
+import Message from "./Message"
 import "../css/games.css"
 
 const CarGame = () => {
-    const { gameOver, setGameOver, endGame} = useContext(GameContext)
+    const { gameOver, setGameOver, endGame, gameMessage} = useContext(GameContext)
     const {isAuthenticated} = useContext(AuthContext)
 
     useEffect(() => {
@@ -22,7 +23,6 @@ const CarGame = () => {
         }
 
         setGameOver(false)
-        console.log('game started')
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                             window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
@@ -173,7 +173,6 @@ const CarGame = () => {
                     buffer.fillStyle = 'black';
                     buffer.fillText('PAUSED',410,310);
                 }
-                console.log('end loop');
                 context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
                 myRequest = requestAnimationFrame(gameLoop);
                 return
@@ -253,7 +252,6 @@ const CarGame = () => {
                     delete gasList[key];
                     if(gaslevel < 5)
                         gaslevel ++;
-                    console.log(gaslevel);
                 }
             }
             drawGasLevel();
@@ -337,7 +335,6 @@ const CarGame = () => {
             context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, canvas.width, canvas.height);
 
             myRequest = requestAnimationFrame(gameLoop);
-            console.log('loop')
         }
 
         myRequest = requestAnimationFrame(gameLoop);
@@ -404,7 +401,7 @@ const CarGame = () => {
 
 
 
-        <div className="controls-container">
+            <div className="controls-container">
               {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
               {!gameOver && <div className="gameover-message">Press Esc to pause / unpause</div>}
               <div className="buttons-container">
@@ -414,8 +411,8 @@ const CarGame = () => {
               </div>
             </div>
 
-            <div id="cargameComands" class="modal">
-              <div class="modal-content">
+            <div id="cargameComands" className="modal">
+              <div className="modal-content">
                 <span className="close" onClick={closeCommands}>&times;</span>
 
                 <p>GOAL: Avoid the obstacles and cllect the cans of gasoline to don't run out of gas. Be careful to don't be caught by police</p>
@@ -427,6 +424,8 @@ const CarGame = () => {
               </div>
 
             </div>
+
+            <Message message={gameMessage}/>
 
         </div>
     )

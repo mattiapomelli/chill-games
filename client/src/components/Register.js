@@ -15,7 +15,6 @@ const Register = (props) => {
         setMessage('')
         e.preventDefault()
         const newUser = {...user, bestScore: finalScore, stats, game: activeGame}
-        console.log(newUser)
         AuthService.register(newUser).then( data => {
             const {isAuthenticated, loggedUser, message} = data
             if(isAuthenticated){
@@ -23,7 +22,7 @@ const Register = (props) => {
                 setIsAuthenticated(isAuthenticated)
                 setIsGuest(false)
             } else {
-                setMessage(message.msgBody)
+                setMessage(message)
             }
         })
     }

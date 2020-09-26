@@ -5,10 +5,11 @@ import {randomlyGenerateEnemy, randomlyGenerateUpgrade, generateEnemyBullet } fr
 import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
 import {Link} from "react-router-dom"
+import Message from "./Message"
 import "../css/games.css"
 
 const ZombieGame = () => {
-    const {endGame, gameOver, setGameOver} = useContext(GameContext)
+    const {endGame, gameOver, setGameOver, gameMessage} = useContext(GameContext)
     const {isAuthenticated} = useContext(AuthContext)
 
     useEffect(() => {
@@ -96,7 +97,7 @@ const ZombieGame = () => {
     
         var continue_update = true;
         var frameCount = 0;
-        var score = 400;
+        var score = 500;
         var enemy_frequency = 300;
         var upgrade_frequency = 1580;
         var damage = 0;                 //quanto i mostri messi insieme tolgono alla torre ogni secondo
@@ -240,6 +241,22 @@ const ZombieGame = () => {
           }
         }
 
+        function mouseClickHandler() {
+          if(continue_update && player1.can_shoot){
+            if(player1.special_attack) {
+              player1.performSpecialAttack(bulletList, gameStats);
+            }
+            else {
+              player1.performAttack(bulletList, gameStats);
+            }
+          }
+         
+          if(poison_active){
+            placing_poison = false;
+            poison_placed = true;
+          }
+        }
+
         function pauseWhenCommandsOpen() {
           if(!gameEnded && !gamePaused)
             gamePaused = true
@@ -250,25 +267,8 @@ const ZombieGame = () => {
         canvas.addEventListener('mousemove', mouseMoveHandler, false)
         //window.addEventListener('resize', scaleCanvas)
         canvas.addEventListener('pause', pauseWhenCommandsOpen)
-        
-        
         //bullet shooting
-        document.onclick = function(mouse){   //on left click
-            if(continue_update && player1.can_shoot){
-              if(player1.special_attack) {
-                player1.performSpecialAttack(bulletList, gameStats);
-              }
-              else {
-                player1.performAttack(bulletList, gameStats);
-              }
-            }
-            console.log(gameStats)
-           
-            if(poison_active){
-              placing_poison = false;
-              poison_placed = true;
-            }
-        }
+        document.addEventListener('click', mouseClickHandler, false)
       
         //GAME LOGIC
         function updateEntity (entity){
@@ -947,6 +947,7 @@ const ZombieGame = () => {
             cancelAnimationFrame(myRequest)
             document.removeEventListener('keydown', keyDownHandler);
             document.removeEventListener('keyup', keyUpHandler);   
+            document.removeEventListener('click', mouseClickHandler)
             canvas.removeEventListener('mousemove', mouseMoveHandler);
             canvas.removeEventListener('pause', pauseWhenCommandsOpen);
         }
@@ -1007,6 +1008,8 @@ const ZombieGame = () => {
               </div>
 
             </div>
+
+            <Message message={gameMessage}/>
 
         </div>
     )

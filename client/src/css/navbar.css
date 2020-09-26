@@ -18,7 +18,7 @@ header {
 .menu-item {
     color: white;
     text-decoration: none;
-    padding: 0.7em;
+    padding: 0.3em;
     font-size: 1.1em;
     display: flex;
     align-items: center;
@@ -26,13 +26,13 @@ header {
 }
 .menu-item span {
     margin-right: 0.5em;
+    margin-bottom: 0.1em;
 }
 
-.menu-item {
-    box-sizing: border-box;
-}
+
+
 .menu-link:hover {
-    /* background-color: rgb(0, 97, 97); */
+    border-top: 3px solid transparent;
     border-bottom: 3px solid rgb(0, 97, 97);
 }
 .active-link {
@@ -47,7 +47,7 @@ header {
     text-decoration: none;
 }
 .user-info:not(.guest) {
-    padding: 0.6em;
+    padding: 0.3em;
 }
 .user-info img {
     width: 2em;

@@ -13,7 +13,7 @@ const signToken = userID => {
     return JWT.sign({               //returns tha actual jwt token
         iss: "RandomCoder",
         sub: userID
-    }, "RandomCoder", {expiresIn: "1h"})     //"RandomCoder" is the key that we wanna sing with
+    }, "RandomCoder", {expiresIn: "14d"})     //"RandomCoder" is the key that we wanna sing with
 }
 
 userRouter.post('/register', (req, res) => {
@@ -50,7 +50,7 @@ userRouter.post('/register', (req, res) => {
                             const {_id, username, bestScore} = newUser
                             const token = signToken(_id)
                             res.cookie('access_token', token, {httpOnly: true, sameSite: true})
-                            res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
+                            res.status(200).json({isAuthenticated: true, loggedUser: {username, _id}})
                             //res.status(201).json({message: {msgBody: "Account successfully created", msgError: false}})
                         }
                     })
@@ -135,15 +135,16 @@ userRouter.put('/:id', passport.authenticate('jwt', {session: false}), (req, res
         User.findByIdAndUpdate(req.params.id, {
             $max: scoreUpdate,
             $inc: statsUpdate
-        }, {new: true}, //to return the updated document and not the original one
+        }, //to return the updated document and not the original one
         (err, user) => {
             if(err)
                 res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
             if(!user)
                 return res.status(400).json({message: {msgBody: "User not found", msgError: true}})
     
-            const {_id, username} = user
-            return res.status(200).json({username, _id})
+            let message = score > user[game].bestScore ? "New record!" : ""
+
+            return res.status(200).json({message: {msgBody: message, msgError: false}})
         })
     } else {
         return res.status(400).json({message: {msgBody: "You are trying to update someone else's profile", msgError: true}})

@@ -1,8 +1,9 @@
 .message-popup {
     position: absolute;
+    font-family: 'Courier New', Courier, monospace;
     width: 300px;
-    border:1px solid rgb(238, 138, 138);
-    background-color:  rgb(243, 196, 196);;
+    border:1px solid rgb(41, 151, 151);
+    background-color:  rgb(163, 207, 207);
     text-align: center;
     padding: 1em;
     box-sizing: border-box;
@@ -13,4 +14,9 @@
 
 .opened {
     right: 10px;
+}
+
+.error {
+    border:1px solid rgb(238, 138, 138);
+    background-color:  rgb(243, 196, 196);
 }
