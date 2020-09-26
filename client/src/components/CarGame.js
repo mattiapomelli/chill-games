@@ -4,14 +4,10 @@ import {randomlyGenerateObstacle, randomlyGenerateStripe, randomlyGenerateBush, 
 import Car from "../games/cargame/classes/Car"
 import PoliceCar from "../games/cargame/classes/PoliceCar"
 import { GameContext } from "../context/GameContext"
-import { AuthContext } from "../context/AuthContext"
-import {Link } from "react-router-dom"
-import Message from "./Message"
-import "../css/games.css"
+import GameControls from "./GameControls"
 
 const CarGame = () => {
-    const { gameOver, setGameOver, endGame, gameMessage} = useContext(GameContext)
-    const {isAuthenticated} = useContext(AuthContext)
+    const { setGameOver, endGame} = useContext(GameContext)
 
     useEffect(() => {
 
@@ -41,7 +37,7 @@ const CarGame = () => {
         let map_ratio = 900/700;
         //let map_scale = 1;
 
-        let canvas = document.getElementById("carCanvas");
+        let canvas = document.getElementById("cargameCanvas");
         let context = canvas.getContext("2d");
         context.font = '20px Arial';
         context.imageSmoothingEnabled = false;
@@ -170,6 +166,8 @@ const CarGame = () => {
             scaleCanvas();
             if(gameEnded || gamePaused){
                 if(gamePaused){
+                    buffer.fillStyle = 'white'
+                    buffer.fillRect(400, 283, 100, 40);
                     buffer.fillStyle = 'black';
                     buffer.fillText('PAUSED',410,310);
                 }
@@ -377,56 +375,19 @@ const CarGame = () => {
 
     }, [endGame, setGameOver])
 
-    const openCommands = (event) => {
-        //pause the game
-        let canvas = document.getElementById("carCanvas")
-        const pauseEvent = new Event('pause');
-        canvas.dispatchEvent(pauseEvent)
-  
-        //open modal
-        const modal = document.getElementById("cargameComands");
-        modal.style.display = "block"
-      }
-  
-      const closeCommands = () => {
-        const modal = document.getElementById("cargameComands");
-        modal.style.display = "none"
-    }
-
     return (
         <div>
-        <div className="canvas-container">
-            <canvas id="carCanvas" width="900" height="700"></canvas>
-        </div>
-
-
-
-            <div className="controls-container">
-              {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
-              {!gameOver && <div className="gameover-message">Press Esc to pause / unpause</div>}
-              <div className="buttons-container">
-                  {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
-                  <span className="secondary-button button" onClick={openCommands}>Commands</span>
-                  <Link to="/" className="secondary-button button">Exit</Link>
-              </div>
+            <div className="canvas-container">
+                <canvas id="cargameCanvas" width="900" height="700"></canvas>
             </div>
 
-            <div id="cargameComands" className="modal">
-              <div className="modal-content">
-                <span className="close" onClick={closeCommands}>&times;</span>
-
+            <GameControls game="cargame">
                 <p>GOAL: Avoid the obstacles and cllect the cans of gasoline to don't run out of gas. Be careful to don't be caught by police</p>
-
                 <div className="command">
-                  <div className="command-key">Arrow keys</div>
-                  <div className="command-description">Move left and right to avoid obstacles</div>
+                    <div className="command-key">Arrow keys</div>
+                    <div className="command-description">Move left and right to avoid the obstacles</div>
                 </div>
-              </div>
-
-            </div>
-
-            <Message message={gameMessage}/>
-
+            </GameControls>
         </div>
     )
 }

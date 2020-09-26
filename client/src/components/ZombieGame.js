@@ -3,14 +3,10 @@ import Player from "../games/zombiegame/classes/Player"
 import {testCollisionEntity, testCollisionEntity2 } from "../games/zombiegame/actions/collision"
 import {randomlyGenerateEnemy, randomlyGenerateUpgrade, generateEnemyBullet } from "../games/zombiegame/actions/actions"
 import { GameContext } from "../context/GameContext"
-import { AuthContext } from "../context/AuthContext"
-import {Link} from "react-router-dom"
-import Message from "./Message"
-import "../css/games.css"
+import GameControls from "./GameControls"
 
 const ZombieGame = () => {
-    const {endGame, gameOver, setGameOver, gameMessage} = useContext(GameContext)
-    const {isAuthenticated} = useContext(AuthContext)
+    const {endGame, setGameOver} = useContext(GameContext)
 
     useEffect(() => {
 
@@ -41,7 +37,7 @@ const ZombieGame = () => {
         let map_ratio = 1400/600;
         let map_scale = 1;
 
-        canvas = document.getElementById("ctx");
+        canvas = document.getElementById("zombiegameCanvas");
         ctx = canvas.getContext('2d')
         ctx.imageSmoothingEnabled = false;
 
@@ -310,8 +306,8 @@ const ZombieGame = () => {
             myRequest = requestAnimationFrame(gameLoop);
             if(gamePaused){
               // buffer.globalAlpha = 0.2;
-              // buffer.fillStyle = "blue"; 
-              // buffer.fillRect(50, 50, 75, 50); 
+              buffer.fillStyle = "white"; 
+              buffer.fillRect(650, 150, 100, 40); 
               buffer.fillStyle = 'black';
               buffer.fillText('PAUSED',660,180);
               }
@@ -954,62 +950,28 @@ const ZombieGame = () => {
 
     }, [endGame, setGameOver])
 
-    const openCommands = (event) => {
-      //pause the game
-      let canvas = document.getElementById("ctx")
-      const pauseEvent = new Event('pause');
-      canvas.dispatchEvent(pauseEvent)
-
-      //open modal
-      const modal = document.getElementById("zombiegameComands");
-      modal.style.display = "block"
-    }
-
-    const closeCommands = () => {
-      const modal = document.getElementById("zombiegameComands");
-      modal.style.display = "none"
-    }
-
     return(
         <div className="game-container">
             <div className="canvas-container">
-                <canvas id="ctx" width="1400" height="600"></canvas>         
-            </div>
-            
-
-            <div className="controls-container">
-              {gameOver && !isAuthenticated && <div className="gameover-message">Register to keep track of your scores and statistics</div>}
-              {!gameOver && <div className="gameover-message">Press Esc to pause / unpause</div>}
-              <div className="buttons-container">
-                  {gameOver && !isAuthenticated && <Link to="/register" className="primary-button button">Sign up</Link>}
-                  <span className="secondary-button button" onClick={openCommands}>Commands</span>
-                  <Link to="/" className="secondary-button button">Exit</Link>
-              </div>
+                <canvas id="zombiegameCanvas" width="1400" height="600"></canvas>         
             </div>
 
-            <div id="zombiegameComands" className="modal">
-              <div className="modal-content">
-                <span className="close" onClick={closeCommands}>&times;</span>
+			<GameControls game="zombiegame">
+				<p>GOAL: Defend the tower from the enemies coming from both sides. Help yourself by collecting upgrades which appear in the world</p>
 
-                <p>GOAL: Defend the tower from the enemies coming from both sides. Help yourself by collecting upgrades which appear in the world</p>
-
-                <div className="command">
-                  <div className="command-key">W, A, S, D</div>
-                  <div className="command-description">Move around and Jump</div>
-                </div>
-                <div className="command">
-                  <div className="command-key">Spacebar</div>
-                  <div className="command-description">Punch the enemies</div>
-                </div>
-                <div className="command">
-                  <div className="command-key">Mouse click</div>
-                  <div className="command-description">Shoot at the enemies when you are on the tower</div>
-                </div>
-              </div>
-
-            </div>
-
-            <Message message={gameMessage}/>
+				<div className="command">
+					<div className="command-key">W, A, S, D</div>
+					<div className="command-description">Move around and Jump</div>
+				</div>
+				<div className="command">
+					<div className="command-key">Spacebar</div>
+					<div className="command-description">Punch the enemies</div>
+				</div>
+				<div className="command">
+					<div className="command-key">Mouse click</div>
+					<div className="command-description">Shoot at the enemies when you are on the tower</div>
+				</div>
+			</GameControls>
 
         </div>
     )
