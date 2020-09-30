@@ -13,7 +13,7 @@ const signToken = userID => {
     return JWT.sign({               //returns tha actual jwt token
         iss: "RandomCoder",
         sub: userID
-    }, "RandomCoder", {expiresIn: "14d"})     //"RandomCoder" is the key that we wanna sing with
+    }, "RandomCoder", {expiresIn: "14d"})     //"RandomCoder" is the key that we wanna sign  with
 }
 
 userRouter.post('/register', (req, res) => {
@@ -47,7 +47,7 @@ userRouter.post('/register', (req, res) => {
                         if(err)
                             res.status(500).json({message: {msgBody: "Error has occured", msgError: true}})
                         else {
-                            const {_id, username, bestScore} = newUser
+                            const {_id, username} = newUser
                             const token = signToken(_id)
                             res.cookie('access_token', token, {httpOnly: true, sameSite: true})
                             res.status(200).json({isAuthenticated: true, loggedUser: {username, _id}})
@@ -78,10 +78,10 @@ userRouter.post('/login', (req, res) => {
         // check if password is correct 
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if(isMatch) {
-                const {_id, username, bestScore} = user
+                const {_id, username} = user
                 const token = signToken(_id)
                 res.cookie('access_token', token, {httpOnly: true, sameSite: true})
-                res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
+                res.status(200).json({isAuthenticated: true, loggedUser: {username, _id}})
             } else {
                 return res.status(400).json({message: {msgBody: "Password incorrect", msgError: true}})
             }
@@ -96,8 +96,8 @@ userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res
 
 //make sure our backend and our frontend is synched in, so that even if the user closes and visits the website again he'll still be logged in if he was authenticated
 userRouter.get('/authenticated', passport.authenticate('jwt', {session: false}),(req, res)=> {  
-    const {username, _id, bestScore} = req.user
-    res.status(200).json({isAuthenticated: true, loggedUser: {username, _id, bestScore}})
+    const {username, _id } = req.user
+    res.status(200).json({isAuthenticated: true, loggedUser: {username, _id}})
 })
 
 // get users sorted by best score for a specific game
