@@ -9,7 +9,7 @@ app.use(cookieParser())
 app.use(express.json())
 
 mongoose
-    .connect(process.env.MONGODB_URI, {
+    .connect(process.env.MONGODB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
