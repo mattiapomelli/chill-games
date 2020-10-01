@@ -3,12 +3,13 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 const userRouter = require('./routes/userRoutes')
+require('dotenv').config()
 
 app.use(cookieParser())
 app.use(express.json())
 
 mongoose
-    .connect('mongodb+srv://mattiapomelli:25163540@zombie-game-v2.wqiz8.mongodb.net/maindb?retryWrites=true&w=majority', {
+    .connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
