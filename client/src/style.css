@@ -26,6 +26,7 @@ body {
     font-family: 'Courier New', Courier, monospace;
 }
 
-.screen-height {
+.screen-height-container {
+    height: 92vh;
     max-height: -webkit-fill-available;
 }

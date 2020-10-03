@@ -74,7 +74,7 @@ const Ranking = (props) => {
     }
 
     return(
-        <div className="page-container screen-height">
+        <div className="page-container screen-height-container">
             <div className="ranking-buttons">
                 <button className={`rank-tab tab ${currentGame === "zombiegame" && "active"}`} onClick={onTabClick} name="zombiegame">Zombie Game</button>
                 <button className={`rank-tab tab ${currentGame === "cargame" && "active"}`} onClick={onTabClick} name="cargame">Car Game</button>
