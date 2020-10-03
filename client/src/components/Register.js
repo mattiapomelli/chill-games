@@ -64,7 +64,8 @@ const Register = (props) => {
 
             </div>
 
-            <p className="guest-text" onClick={signAsGuest}> Continue as a guest </p>
+            <p className="guest-text"> By signin up your records and game statistics will be automatically tracked.
+            If you just want to try the games you can <span onClick={signAsGuest}>continue as a guest</span></p>
 
             <Message message={message}/>
         </div>

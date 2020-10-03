@@ -91,7 +91,13 @@
 .guest-text {
     text-align: center;
     cursor: pointer;
+    width: 420px;
+    max-width: 90%;
+    font-size: 0.9em;
 }
-.guest-text:hover {
-    color: rgb(82, 82, 82);
+.guest-text span {
+    color: rgb(58, 30, 136);
+}
+.guest-text span:hover {
+    text-decoration: underline;
 }

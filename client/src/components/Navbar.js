@@ -49,6 +49,7 @@ const Navbar = (props) => {
         <div>
 			<div className="header-container">
 
+				<Link to="/" className="logo"><img src="/images/logo.svg" className="hide-desktop" alt="logo"/></Link>
 				<span className="material-icons hide-desktop" id="menu">menu</span>
 
 				<header className="show-desktop hide-mobile" id="nav">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Landing from "./components/Landing"
 import ZombieGame from './components/ZombieGame';
 import CarGame from './components/CarGame';
@@ -17,6 +17,11 @@ import "./style.css"
 
 function App() {
 	let location = useLocation()
+
+	useEffect(() => {   //trick to set max height to 100vh in mobile devices
+        let vh = window.innerHeight*0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`)   //create --vh variable at the root
+    })
 
   	return (
     	<div className="App">

@@ -76,6 +76,14 @@ header {
     text-transform: uppercase;
 }
 
+.logo {
+    line-height: 0;
+}
+
+.logo img {
+    height: 20px;
+}
+
 /* Phone Sidebar Nav */
 
 /* .hide-mobile {
@@ -102,7 +110,7 @@ header {
         height: 7vh;
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         padding: 0 2em;
     }
     header {

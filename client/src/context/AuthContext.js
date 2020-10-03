@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     return (   
         <div>
-            {!isLoaded ? <div className="page-container"><h1 className="loading">Loading...</h1></div> :
+            {!isLoaded ? <div className="page-container scrollable-container"><h1 className="loading">Loading...</h1></div> :
             <AuthContext.Provider value={{loggedUser, setLoggedUser, isAuthenticated, setIsAuthenticated, isGuest, setIsGuest}}>
                 { children } 
             </AuthContext.Provider>}

@@ -142,6 +142,17 @@ canvas {
     box-sizing: border-box;
 }
 
+.mobile-alert {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    width: 90%;
+    margin: 1em auto;
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    border:1px solid rgb(238, 138, 138);
+    background-color:  rgb(243, 196, 196);
+}
+
 @media only screen and (max-width: 500px) {
     .command {
         flex-direction: column;

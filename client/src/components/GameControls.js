@@ -1,4 +1,4 @@
-import React, {Fragment, useContext} from "react"
+import React, {Fragment, useContext, useEffect} from "react"
 import { GameContext } from "../context/GameContext"
 import { AuthContext } from "../context/AuthContext"
 import {Link } from "react-router-dom"
@@ -8,6 +8,10 @@ import "../css/games.css"
 const GameControls = ({game, children}) => {
     const { gameOver, gameMessage} = useContext(GameContext)
     const {isAuthenticated} = useContext(AuthContext)
+
+    useEffect(() => {
+        console.log("hey")
+    })
 
     const openCommands = () => {
         //pause the game
@@ -23,6 +27,22 @@ const GameControls = ({game, children}) => {
       const closeCommands = () => {
         const modal = document.getElementById(`comands`);
         modal.style.display = "none"
+    }
+
+    function checkifMobileDevice() {
+        const toMatch = [
+            /Android/i,
+            /webOS/i,
+            /iPhone/i,
+            /iPad/i,
+            /iPod/i,
+            /BlackBerry/i,
+            /Windows Phone/i
+        ];
+    
+        return toMatch.some((toMatchItem) => {
+            return navigator.userAgent.match(toMatchItem);
+        });
     }
 
     return (
@@ -45,6 +65,8 @@ const GameControls = ({game, children}) => {
               </div>
 
             </div>
+
+            {checkifMobileDevice() && <div className="mobile-alert">Sorry, this game doesn't support touch controls</div>}
 
             <Message message={gameMessage}/>
         </Fragment>
