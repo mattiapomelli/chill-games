@@ -48,7 +48,7 @@ const Profile = (props) => {
     }
 
     return (
-        <div className="page-container">
+        <div className="page-container screen-height">
             
             { loaded ?
             <Fragment>

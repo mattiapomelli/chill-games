@@ -25,3 +25,7 @@ body {
     min-height: 92vh;
     font-family: 'Courier New', Courier, monospace;
 }
+
+.screen-height {
+    max-height: -webkit-fill-available;
+}

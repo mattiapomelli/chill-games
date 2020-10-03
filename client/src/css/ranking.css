@@ -201,10 +201,17 @@ td a:hover {
     margin-top: 52%;
 }
 
+@media only screen and (max-width: 400px) {
+    :root {
+        --table-headers-height: 46px;
+        --table-cell-height: 46px;
+    }
+}
+
 @media only screen and (max-width: 350px) {
     :root {
-        --table-headers-height: 40px;
-        --table-cell-height: 40px;
+        --table-headers-height: 38px;
+        --table-cell-height: 38px;
     }
 
     th, td {
